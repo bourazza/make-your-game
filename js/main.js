@@ -1,5 +1,5 @@
 let tet =document.getElementsByClassName('tetris-header')
-let expected  =document.getElementsByClassName('tetris-predected')
+let expected  =document.getElementsByClassName('tetris-predicted')
 
 for(let i=0;i<200;i++){
     let dive =document.createElement('div')

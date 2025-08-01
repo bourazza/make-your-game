@@ -1,18 +1,21 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const menuButton = document.getElementById('menu')
-    const parentContainer = document.getElementById('container')
+export const menuFunction = () => {
+    const menuButton = document.querySelector('.menu-button')
+    const pauseMenu = document.querySelector('.pause-menu')
+    const continueButton  = document.querySelector('.continue-button')
+    const restartButton = document.querySelector('.restart-button')
 
-    menuButton.addEventListener('onClick', () => {
-        const pauseMenu = document.createElement('div')
-        pauseMenu.setAttribute('class', 'pause-menu')
+    console.log(menuButton);
 
-        const continueButton = document.createElement('button')
-        continueButton.textContent = 'Continue'
-
-        const restartButton = document.createElement('button')
-        restartButton.textContent = 'Restart'
-
-        pauseMenu.appendChild(continueButton)
-        pauseMenu.appendChild(restartButton)
+    menuButton.addEventListener('click', () => {
+        pauseMenu.style.display = 'flex'
     })
-})
+
+    continueButton.addEventListener('click', ()=>{
+        pauseMenu.style.display = 'none'
+    })
+
+    restartButton.addEventListener('click', ()=>{
+        pauseMenu.style.display = 'none'
+    })
+
+}

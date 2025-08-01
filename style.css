@@ -34,6 +34,61 @@ body {
 
 }
 
+.pause-menu {
+  display: none;
+  position: absolute;
+  cursor: pointer;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 550px;
+  background-color: rgb(85, 6, 6);
+  z-index: 10;
+  border: 2px solid;
+  border-color: aliceblue;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.continue-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 2px solid;
+  width: 100px;
+  height: 40px;
+  border-color: aliceblue;
+  cursor: pointer;
+  color: aliceblue;
+}
+
+.restart-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 2px solid;
+  width: 100px;
+  height: 40px;
+  border-color: aliceblue;
+  cursor: pointer;
+  color: aliceblue;
+}
+
+.menu-button {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  width: 80px;
+  height: 80px;
+  background-color: aquamarine;
+
+}
+
 .tetris-predicted {
   width: 250px;
   height: 500px;

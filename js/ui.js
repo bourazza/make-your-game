@@ -4,8 +4,6 @@ export const menuFunction = () => {
     const continueButton  = document.querySelector('.continue-button')
     const restartButton = document.querySelector('.restart-button')
 
-    console.log(menuButton);
-
     menuButton.addEventListener('click', () => {
         pauseMenu.style.display = 'flex'
     })
@@ -16,6 +14,7 @@ export const menuFunction = () => {
 
     restartButton.addEventListener('click', ()=>{
         pauseMenu.style.display = 'none'
+        restartGame()
     })
 
 }

@@ -1,5 +1,42 @@
-let tet =document.getElementsByClassName('tetris-header')
-let expected  =document.getElementsByClassName('tetris-predected')
+import { menuFunction } from "./ui.js"
+
+const COLS = 10
+const ROWS = 20
+
+let gameState = {
+    board: Array(ROWS).fill().map(() => Array(COLS).fill(0)),
+    currentTetromino: null,
+    currentX: 4,
+    currentY: 0,
+    paused: false,
+    gameOver: false,
+    score: 0,
+    level: 0,
+}
+
+const colors = {
+    I: 'cyan',
+    O: 'yellow',
+    T: 'purple',
+    S: 'green',
+    Z: 'red',
+    J: 'blue',
+    L: 'orange'
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initialize();
+})
+
+function initialize() {
+    createBoard()
+    loadTetromioes()
+    setupControls()
+}
+
+function createBoard() {
+    let tet = document.getElementsByClassName('tetris-header')
+    let expected = document.getElementsByClassName('tetris-predicted')
 
 for(let i=0;i<200;i++){
     let dive =document.createElement('div')
@@ -15,26 +52,3 @@ for(let i=0;i<20;i++){
     
 
 }
-const COLS = 10;
-
-fetch('./js/tetrisshapse.json')
-  .then(response => response.json())
-  .then(data => {
-    const tetrominoes = data.tetrominoes;
-
-    const shape = tetrominoes.T; 
-
-    const startX = 4;
-    const startY = 0;
-
-    for (let row = 0; row < shape.length; row++) {
-      for (let col = 0; col < shape[row].length; col++) {
-        if (shape[row][col] === 1) {
-          const index = (startY + row) * COLS + (startX + col);
-          const block = document.getElementById(index);
-          if (block) block.style.backgroundColor = 'cyan'; 
-        }
-      }
-    }
-  })
-  .catch(error => console.error('Error loading shapes:', error));

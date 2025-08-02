@@ -60,6 +60,7 @@ function generateNewTetromino() {
     const pieces = Object.keys(tetrominoes)
     const n = Math.floor(Math.random() * pieces.length)
     const randomPiece = pieces[n]
+    console.log(randomPiece)
     gameState.currentTetromino = tetrominoes[randomPiece]
 }
 
@@ -71,14 +72,14 @@ function setupControls() {
             case 'ArrowRight':
                 if (startX < COLS - gameState.currentTetromino.rotations[position].width) {
                     startX += 1
-                    if (startX < 0 || startX + getCurrentPiecewidth() > COLS) { return }
+                    if (startX < 0 || startX + getCurrentPiecewidth() > COLS) { break }
                     movePiece(startX)
                 }
                 break
             case 'ArrowLeft':
                 if (startX > 0) {
                     startX -= 1
-                    if (startX < 0) { return }
+                    if (startX < 0) { break }
                     movePiece(startX)
                 }
                 break
@@ -87,12 +88,15 @@ function setupControls() {
                 if (position < 0) {
                     position = 3;
                 }
+                movePiece(startX)
                 break;
             case 'ArrowUp':
                 position += 1
                 if (position == 4) {
                     position = 0
                 }
+                movePiece(startX)
+                break
         }
     })
 

@@ -3,12 +3,14 @@ import { menuFunction } from "./ui.js"
 const COLS = 10
 const ROWS = 20
 let position =0
-
+let startX = 4;
+let startY = 0;
 let gameState = {
     board: Array(ROWS).fill().map(() => Array(COLS).fill(0)),
     currentTetromino: null,
     currentX: 4,
     currentY: 0,
+    
      
     paused: false,
     gameOver: false,
@@ -61,8 +63,7 @@ function loadTetromioes() {
             const tetrominoes = data.tetrominoes;
             var shape = tetrominoes.L;
             console.log(shape)
-            const startX = 4;
-            const startY = 0;
+            
             
 const rotation = shape[position];
             for (let row = 0; row < rotation.length; row++) {
@@ -85,9 +86,17 @@ function setupControls() {
 
         switch (e.code) {
             case 'ArrowRight':
+                startX+=1
+                loadTetromioes()
+                break
 
                
             case 'ArrowLeft':
+                startX-=1
+                if (startX==0){
+                    startX==4
+                }
+                loadTetromioes()
                 break
              case 'ArrowDown':
         position -= 1;

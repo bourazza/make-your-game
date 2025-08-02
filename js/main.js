@@ -52,6 +52,7 @@ function loadTetromioes() {
         .then(data => {
             tetrominoes = data.tetrominoes;
             generateNewTetromino();
+            gameLoop()
         })
         .catch(error => console.error('Error loading shapes:', error));
 }
@@ -60,7 +61,6 @@ function generateNewTetromino() {
     const pieces = Object.keys(tetrominoes)
     const n = Math.floor(Math.random() * pieces.length)
     const randomPiece = pieces[n]
-    console.log(randomPiece)
     gameState.currentTetromino = tetrominoes[randomPiece]
 }
 
@@ -88,14 +88,14 @@ function setupControls() {
                 if (position < 0) {
                     position = 3;
                 }
-                movePiece(startX)
+                movePiece()
                 break;
             case 'ArrowUp':
                 position += 1
                 if (position == 4) {
                     position = 0
                 }
-                movePiece(startX)
+                movePiece()
                 break
         }
     })
@@ -103,16 +103,13 @@ function setupControls() {
 
 }
 
-function movePiece(lStartX) {
+function movePiece(lStartX = startX) {
     clearBoard();
     const rotation = gameState.currentTetromino.rotations[position].shape;
     for (let row = 0; row < rotation.length; row++) {
         for (let col = 0; col < rotation[row].length; col++) {
             if (rotation[row][col] === 1) {
                 const index = (startY + row) * COLS + (lStartX + col);
-                gameState.currentX = lStartX;
-                gameState.currentY = startY;
-                // gameState.board[]
                 const block = document.getElementById(index);
 
                 if (block) block.style.backgroundColor = gameState.currentTetromino.color;
@@ -130,6 +127,35 @@ function clearBoard() {
         const cell = document.getElementById(i);
         if (cell) {
             cell.style.backgroundColor = '';
+        }
+    }
+}
+let counter = 0
+let dropTimer = 0
+function gameLoop() {
+    if (!gameState.gameOver && !gameState.paused) {
+        dropTimer += 16
+        if (dropTimer > 1000 && counter <= (ROWS - gameState.currentTetromino.rotations[position].height)) {
+            startY = counter
+            dropTetromino(counter)
+            counter++
+            dropTimer = 0
+        }
+    }
+    requestAnimationFrame(gameLoop)
+}
+
+function dropTetromino(lStartY) {
+    clearBoard()
+    const rotation = gameState.currentTetromino.rotations[position].shape;
+
+    for (let row = 0; row < rotation.length; row++) {
+        for (let col = 0; col < rotation[row].length; col++) {
+            if (rotation[row][col] == 1) {
+                const index = (lStartY + row) * COLS + (startX + col);
+                const block = document.getElementById(index)
+                if (block) block.style.backgroundColor = gameState.currentTetromino.color;
+            }
         }
     }
 }

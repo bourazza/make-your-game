@@ -38,7 +38,7 @@ function createBoard() {
         tet[0].appendChild(dive)
     }
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 20; i++) {
         let dive = document.createElement('div')
         dive.id = i
         expected[0].appendChild(dive)

@@ -2,30 +2,20 @@ import { menuFunction } from "./ui.js"
 
 const COLS = 10
 const ROWS = 20
-let position =0
+let position = 0
 let startX = 4;
 let startY = 0;
+let tetrominoes = {};
+
 let gameState = {
     board: Array(ROWS).fill().map(() => Array(COLS).fill(0)),
     currentTetromino: null,
     currentX: 4,
     currentY: 0,
-    
-     
     paused: false,
     gameOver: false,
     score: 0,
     level: 0,
-}
-
-const colors = {
-    I: 'cyan',
-    O: 'yellow',
-    T: 'purple',
-    S: 'green',
-    Z: 'red',
-    J: 'blue',
-    L: 'orange'
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -58,26 +48,19 @@ function createBoard() {
 
 function loadTetromioes() {
     clearBoard()
-    fetch('js/tetrisshapse.json').then(response => response.json())
+    fetch('js/tetrisshapes.json').then(response => response.json())
         .then(data => {
-            const tetrominoes = data.tetrominoes;
-            var shape = tetrominoes.L;
-            console.log(shape)
-            
-            
-const rotation = shape[position];
-            for (let row = 0; row < rotation.length; row++) {
-                for (let col = 0; col < rotation[row].length; col++) {
-                    if (rotation[row][col] === 1) {
-                        console.log('f')
-                        const index = (startY + row) * COLS + (startX + col);
-                        const block = document.getElementById(index);
-                        if (block) block.style.backgroundColor = 'cyan';
-                    }
-                }
-            }
+            tetrominoes = data.tetrominoes;
+            generateNewTetromino();
         })
         .catch(error => console.error('Error loading shapes:', error));
+}
+
+function generateNewTetromino() {
+    const pieces = Object.keys(tetrominoes)
+    const n = Math.floor(Math.random() * pieces.length)
+    const randomPiece = pieces[n]
+    gameState.currentTetromino = tetrominoes[randomPiece]
 }
 
 function setupControls() {
@@ -86,41 +69,63 @@ function setupControls() {
 
         switch (e.code) {
             case 'ArrowRight':
-                startX+=1
-                loadTetromioes()
+                if (startX < COLS - gameState.currentTetromino.rotations[position].width) {
+                    startX += 1
+                    if (startX < 0 || startX + getCurrentPiecewidth() > COLS) { return }
+                    movePiece(startX)
+                }
                 break
-
-               
             case 'ArrowLeft':
-                startX-=1
-                if (startX==0){
-                    startX==4
+                if (startX > 0) {
+                    startX -= 1
+                    if (startX < 0) { return }
+                    movePiece(startX)
                 }
-                loadTetromioes()
                 break
-             case 'ArrowDown':
-        position -= 1;
-        if (position < 0) {
-            position = 3; 
-        }
-        loadTetromioes();
-        break;
-            case 'ArrowUp':
-                position+=1
-                if(position==4){
-                    position=0
+            case 'ArrowDown':
+                position -= 1;
+                if (position < 0) {
+                    position = 3;
                 }
-                loadTetromioes() 
+                break;
+            case 'ArrowUp':
+                position += 1
+                if (position == 4) {
+                    position = 0
+                }
         }
     })
 
-    
+
 }
-function clearBoard() {
-  for (let i = 0; i < 200; i++) {
-    const cell = document.getElementById(i);
-    if (cell) {
-      cell.style.backgroundColor = '';
+
+function movePiece(lStartX) {
+    clearBoard();
+    const rotation = gameState.currentTetromino.rotations[position].shape;
+    for (let row = 0; row < rotation.length; row++) {
+        for (let col = 0; col < rotation[row].length; col++) {
+            if (rotation[row][col] === 1) {
+                const index = (startY + row) * COLS + (lStartX + col);
+                gameState.currentX = lStartX;
+                gameState.currentY = startY;
+                // gameState.board[]
+                const block = document.getElementById(index);
+
+                if (block) block.style.backgroundColor = gameState.currentTetromino.color;
+            }
+        }
     }
-  }
+}
+
+function getCurrentPiecewidth() {
+    return gameState.currentTetromino.rotations[position].width
+}
+
+function clearBoard() {
+    for (let i = 0; i < 200; i++) {
+        const cell = document.getElementById(i);
+        if (cell) {
+            cell.style.backgroundColor = '';
+        }
+    }
 }

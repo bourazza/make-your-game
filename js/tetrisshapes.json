@@ -1,0 +1,179 @@
+{
+  "tetrominoes": {
+    "I": {
+      "color": "cyan",
+      "rotations": [
+        {
+          "shape": [[1, 1, 1, 1]],
+          "width": 4,
+          "height": 1
+        },
+        {
+          "shape": [[1], [1], [1], [1]],
+          "width": 1,
+          "height": 4
+        },
+        {
+          "shape": [[1, 1, 1, 1]],
+          "width": 4,
+          "height": 1
+        },
+        {
+          "shape": [[1], [1], [1], [1]],
+          "width": 1,
+          "height": 4
+        }
+      ]
+    },
+    "O": {
+      "color": "yellow",
+      "rotations": [
+        {
+          "shape": [[1, 1], [1, 1]],
+          "width": 2,
+          "height": 2
+        },
+        {
+          "shape": [[1, 1], [1, 1]],
+          "width": 2,
+          "height": 2
+        },
+        {
+          "shape": [[1, 1], [1, 1]],
+          "width": 2,
+          "height": 2
+        },
+        {
+          "shape": [[1, 1], [1, 1]],
+          "width": 2,
+          "height": 2
+        }
+      ]
+    },
+    "T": {
+      "color": "purple",
+      "rotations": [
+        {
+          "shape": [[0, 1, 0], [1, 1, 1]],
+          "width": 3,
+          "height": 2
+        },
+        {
+          "shape": [[1, 0], [1, 1], [1, 0]],
+          "width": 2,
+          "height": 3
+        },
+        {
+          "shape": [[1, 1, 1], [0, 1, 0]],
+          "width": 3,
+          "height": 2
+        },
+        {
+          "shape": [[0, 1], [1, 1], [0, 1]],
+          "width": 2,
+          "height": 3
+        }
+      ]
+    },
+    "S": {
+      "color": "green",
+      "rotations": [
+        {
+          "shape": [[0, 1, 1], [1, 1, 0]],
+          "width": 3,
+          "height": 2
+        },
+        {
+          "shape": [[1, 0], [1, 1], [0, 1]],
+          "width": 2,
+          "height": 3
+        },
+        {
+          "shape": [[0, 1, 1], [1, 1, 0]],
+          "width": 3,
+          "height": 2
+        },
+        {
+          "shape": [[1, 0], [1, 1], [0, 1]],
+          "width": 2,
+          "height": 3
+        }
+      ]
+    },
+    "Z": {
+      "color": "red",
+      "rotations": [
+        {
+          "shape": [[1, 1, 0], [0, 1, 1]],
+          "width": 3,
+          "height": 2
+        },
+        {
+          "shape": [[0, 1], [1, 1], [1, 0]],
+          "width": 2,
+          "height": 3
+        },
+        {
+          "shape": [[1, 1, 0], [0, 1, 1]],
+          "width": 3,
+          "height": 2
+        },
+        {
+          "shape": [[0, 1], [1, 1], [1, 0]],
+          "width": 2,
+          "height": 3
+        }
+      ]
+    },
+    "J": {
+      "color": "blue",
+      "rotations": [
+        {
+          "shape": [[1, 0, 0], [1, 1, 1]],
+          "width": 3,
+          "height": 2
+        },
+        {
+          "shape": [[1, 1], [1, 0], [1, 0]],
+          "width": 2,
+          "height": 3
+        },
+        {
+          "shape": [[1, 1, 1], [0, 0, 1]],
+          "width": 3,
+          "height": 2
+        },
+        {
+          "shape": [[0, 1], [0, 1], [1, 1]],
+          "width": 2,
+          "height": 3
+        }
+      ]
+    },
+    "L": {
+      "color": "orange",
+      "rotations": [
+        {
+          "shape": [[0, 0, 1], [1, 1, 1]],
+          "width": 3,
+          "height": 2
+        },
+        {
+          "shape": [[1, 0], [1, 0], [1, 1]],
+          "width": 2,
+          "height": 3
+        },
+        {
+          "shape": [[1, 1, 1], [1, 0, 0]],
+          "width": 3,
+          "height": 2
+        },
+        {
+          "shape": [[1, 1], [0, 1], [0, 1]],
+          "width": 2,
+          "height": 3
+        }
+      ]
+    }
+  }
+}

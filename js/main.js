@@ -10,8 +10,6 @@ let tetrominoes = {};
 let gameState = {
     board: Array(ROWS).fill().map(() => Array(COLS).fill(0)),
     currentTetromino: null,
-    currentX: 4,
-    currentY: 0,
     paused: false,
     gameOver: false,
     score: 0,
@@ -72,15 +70,15 @@ function setupControls() {
             case 'ArrowRight':
                 if (startX < COLS - gameState.currentTetromino.rotations[position].width) {
                     startX += 1
-                    if (startX < 0 || startX + getCurrentPiecewidth() > COLS) { break }
-                    movePiece(startX)
+                    if (startX < 0 || startX + getCurrentPieceWidth() > COLS) { break }
+                    moveTetromino(startY, startX)
                 }
                 break
             case 'ArrowLeft':
                 if (startX > 0) {
                     startX -= 1
                     if (startX < 0) { break }
-                    movePiece(startX)
+                    moveTetromino(startY, startX)
                 }
                 break
             case 'ArrowDown':
@@ -88,14 +86,14 @@ function setupControls() {
                 if (position < 0) {
                     position = 3;
                 }
-                movePiece()
+                moveTetromino()
                 break;
             case 'ArrowUp':
                 position += 1
                 if (position == 4) {
                     position = 0
                 }
-                movePiece()
+                moveTetromino()
                 break
         }
     })
@@ -103,23 +101,12 @@ function setupControls() {
 
 }
 
-function movePiece(lStartX = startX) {
-    clearBoard();
-    const rotation = gameState.currentTetromino.rotations[position].shape;
-    for (let row = 0; row < rotation.length; row++) {
-        for (let col = 0; col < rotation[row].length; col++) {
-            if (rotation[row][col] === 1) {
-                const index = (startY + row) * COLS + (lStartX + col);
-                const block = document.getElementById(index);
-
-                if (block) block.style.backgroundColor = gameState.currentTetromino.color;
-            }
-        }
-    }
+function getCurrentPieceWidth() {
+    return gameState.currentTetromino.rotations[position].width
 }
 
-function getCurrentPiecewidth() {
-    return gameState.currentTetromino.rotations[position].width
+function getCurrentPieceHeight() {
+    return gameState.currentTetromino.rotations[position].height
 }
 
 function clearBoard() {
@@ -130,32 +117,71 @@ function clearBoard() {
         }
     }
 }
+
 let counter = 0
 let dropTimer = 0
 function gameLoop() {
     if (!gameState.gameOver && !gameState.paused) {
-        dropTimer += 16
-        if (dropTimer > 1000 && counter <= (ROWS - gameState.currentTetromino.rotations[position].height)) {
-            startY = counter
-            dropTetromino(counter)
-            counter++
+        dropTimer += 222
+        if (dropTimer > 1000) {
+            if (counter <= (ROWS - getCurrentPieceHeight())) {
+                startY = counter
+                moveTetromino(counter)
+                counter++
+            } else {
+                placeTetromino()
+                spawnNewPiece()
+            }
             dropTimer = 0
         }
     }
     requestAnimationFrame(gameLoop)
 }
 
-function dropTetromino(lStartY) {
+function moveTetromino(lStartY = startY, lStartX = startX) {
     clearBoard()
+
+    for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+            if (gameState.board[row][col] !== 0) {
+                const index = row * COLS + col;
+                const block = document.getElementById(index);
+                if (block) block.style.backgroundColor = gameState.board[row][col];
+            }
+        }
+    }
+
     const rotation = gameState.currentTetromino.rotations[position].shape;
 
     for (let row = 0; row < rotation.length; row++) {
         for (let col = 0; col < rotation[row].length; col++) {
             if (rotation[row][col] == 1) {
-                const index = (lStartY + row) * COLS + (startX + col);
+                const index = (lStartY + row) * COLS + (lStartX + col);
                 const block = document.getElementById(index)
                 if (block) block.style.backgroundColor = gameState.currentTetromino.color;
             }
         }
     }
+}
+
+function placeTetromino() {
+    const rotation = gameState.currentTetromino.rotations[position].shape
+
+    for (let row = 0; row < rotation.length; row++) {
+        for (let col = 0; col < rotation[row].length; col++) {
+            if (rotation[row][col] == 1) {
+                let x = startX + col
+                let y = startY + row
+                if (y >= 0) { gameState.board[y][x] = gameState.currentTetromino.color }
+            }
+        }
+    }
+}
+
+function spawnNewPiece() {
+    counter = 0;
+    startY = 0;
+    startX = 4;
+    position = 0;
+    generateNewTetromino();
 }

@@ -1,4 +1,4 @@
-import { menuFunction } from "./ui.js"
+import { menuFunction, updateStats } from "./ui.js"
 
 const COLS = 10
 const ROWS = 20
@@ -13,7 +13,8 @@ let gameState = {
     paused: false,
     gameOver: false,
     score: 0,
-    level: 0,
+    level: 1,
+    dropSpeed: 0,
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -52,7 +53,7 @@ function loadTetromioes() {
             generateNewTetromino();
             gameLoop()
         })
-        
+
         .catch(error => console.error('Error loading shapes:', error));
 }
 
@@ -63,12 +64,6 @@ function generateNewTetromino() {
     gameState.currentTetromino = tetrominoes[randomPiece]
 }
 
-
-
-
-
-
-
 function clearBoard() {
     for (let i = 0; i < 200; i++) {
         const cell = document.getElementById(i);
@@ -78,45 +73,53 @@ function clearBoard() {
     }
 }
 
-let dropTimer = 0
 function checkCollision(testY, testX, testPosition = position) {
     const rotation = gameState.currentTetromino.rotations[testPosition].shape;
-    
+
     for (let row = 0; row < rotation.length; row++) {
         for (let col = 0; col < rotation[row].length; col++) {
             if (rotation[row][col] === 1) {
                 const boardY = testY + row;
                 const boardX = testX + col;
-                
+
                 if (boardX < 0 || boardX >= COLS || boardY >= ROWS) {
-                    return true; 
+                    return true;
                 }
-                
+
                 if (boardY >= 0 && gameState.board[boardY][boardX] !== 0) {
-                    return true; 
+                    return true;
                 }
             }
         }
     }
-    return false; 
+    return false;
 }
+
+let dropSpeed = 0
 function gameLoop() {
     if (!gameState.gameOver && !gameState.paused) {
-        dropTimer += 222
-        if (dropTimer > 1000) {
+        dropSpeed += 22
+        if (dropSpeed > getUpdatedInterval()) {
             if (!checkCollision(startY + 1, startX)) {
                 startY++;
                 moveTetromino(startY, startX);
             } else {
                 placeTetromino();
-                checkLines(); 
+                checkLines();
                 spawnNewPiece();
             }
-            dropTimer = 0
+            dropSpeed = 0
         }
     }
     requestAnimationFrame(gameLoop)
 }
+
+function getUpdatedInterval() {
+    const bSpeed = 1000
+    const increaseSpeed = 60
+    return Math.max(100, bSpeed - (gameState.level * increaseSpeed))
+}
+
 function setupControls() {
     document.addEventListener('keydown', (e) => {
         if (gameState.paused || gameState.gameOver) return
@@ -136,8 +139,10 @@ function setupControls() {
                 break;
             case 'ArrowDown':
                 if (!checkCollision(startY + 1, startX)) {
-                    startY++;
+                    startY += 1;
                     moveTetromino(startY, startX);
+                    gameState.score += 2
+                    updateStats(gameState.score, gameState.level)
                 } else {
                     placeTetromino();
                     checkLines();
@@ -156,8 +161,10 @@ function setupControls() {
 }
 
 function moveTetromino(lStartY = startY, lStartX = startX) {
+    // should clear only the divs that the piece are in not all the 200 one
     clearBoard()
 
+    // to respawn the pieces after clearing the board
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
             if (gameState.board[row][col] !== 0) {
@@ -200,7 +207,7 @@ function spawnNewPiece() {
     startX = 4;
     position = 0;
     generateNewTetromino();
-    
+
     if (checkCollision(startY, startX)) {
         gameState.gameOver = true;
         console.log("Game Over!");
@@ -208,17 +215,20 @@ function spawnNewPiece() {
 }
 function checkLines() {
     let linesCleared = 0;
-    
+
     for (let row = ROWS - 1; row >= 0; row--) {
         if (gameState.board[row].every(cell => cell !== 0)) {
             gameState.board.splice(row, 1);
             gameState.board.unshift(Array(COLS).fill(0));
             linesCleared++;
-            row++; 
+            row++;
         }
     }
-    
+
     if (linesCleared > 0) {
         gameState.score += linesCleared * 100 * (gameState.level + 1);
+        gameState.level += linesCleared
+
+        updateStats(gameState.score, gameState.level)
     }
 }

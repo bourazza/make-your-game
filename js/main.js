@@ -59,7 +59,7 @@ function createBoard() {
 
 
 function loadTetromioes() {
-    clearBoard()
+    // clearBoard()
     fetch('js/tetrisshapes.json').then(response => response.json())
         .then(data => {
             tetrominoes = data.tetrominoes;
@@ -127,6 +127,7 @@ export function gameLoop(arg) {
         if (dropSpeed > getUpdatedInterval()) {
             if (!checkCollision(startY + 1, startX)) {
                 startY++;
+                clearBlocks(startY - 1, startX)
                 moveTetromino(startY, startX);
                 nextTetromino('next', tetrominoes[randomPiece])
                 nextTetromino('next2', tetrominoes[next])
@@ -155,18 +156,21 @@ function setupControls() {
             case 'ArrowRight':
                 if (!checkCollision(startY, startX + 1)) {
                     startX += 1;
+                    clearBlocks(startY, startX - 1)
                     moveTetromino(startY, startX);
                 }
                 break;
             case 'ArrowLeft':
                 if (!checkCollision(startY, startX - 1)) {
                     startX -= 1;
+                    clearBlocks(startY, startX + 1)
                     moveTetromino(startY, startX);
                 }
                 break;
             case 'ArrowDown':
                 if (!checkCollision(startY + 1, startX)) {
                     startY += 1;
+                    clearBlocks(startY - 1, startX)
                     moveTetromino(startY, startX);
                     gameState.score += 2
                     updateStats(gameState.score, gameState.level)
@@ -179,6 +183,7 @@ function setupControls() {
             case 'ArrowUp':
                 const newPosition = (position + 1) % 4;
                 if (!checkCollision(startY, startX, newPosition)) {
+                    clearBlocks(startY, startX)
                     position = newPosition;
                     moveTetromino(startY, startX);
                 }
@@ -192,24 +197,35 @@ function setupControls() {
     })
 }
 
-export function moveTetromino(lStartY = startY, lStartX = startX) {
-
-    clearBoard()
-
-    for (let row = 0; row < ROWS; row++) {
-        for (let col = 0; col < COLS; col++) {
-            if (pause === 1) {
-                break
-
-            } else if (gameState.board[row][col] !== 0) {
-                const index = row * COLS + col;
-                const block = document.getElementById(index);
-                if (block) block.style.backgroundColor = gameState.board[row][col];
+function clearBlocks(y, x) {
+    const rotation = gameState.currentTetromino.rotations[position].shape;
+    for (let row = 0; row < rotation.length; row++) {
+        for (let col = 0; col < rotation[row].length; col++) {
+            if (rotation[row][col] == 1) {
+                const index = (y + row) * COLS + (x + col)
+                const block = document.getElementById(index)
+                if (block) block.style.backgroundColor = ''
             }
 
         }
 
     }
+}
+
+export function moveTetromino(lStartY = startY, lStartX = startX) {
+    // should clear only the divs that the piece are in not all the 200 one
+    // clearBoard()
+
+    // to respawn the pieces after clearing the board
+    // for (let row = 0; row < ROWS; row++) {
+    //     for (let col = 0; col < COLS; col++) {
+    //         if (gameState.board[row][col] !== 0) {
+    //             const index = row * COLS + col;
+    //             const block = document.getElementById(index);
+    //             if (block) block.style.backgroundColor = gameState.board[row][col];
+    //         }
+    //     }
+    // }
 
     const rotation = gameState.currentTetromino.rotations[position].shape;
 
@@ -278,11 +294,18 @@ function spawnNewPiece() {
         console.log("Game Over!");
     }
 }
+
 function checkLines() {
     let linesCleared = 0;
 
     for (let row = ROWS - 1; row >= 0; row--) {
         if (gameState.board[row].every(cell => cell !== 0)) {
+            for (let col = 0; col < COLS; col++) {
+                const index = row * COLS + col;
+                const block = document.getElementById(index);
+                if (block) block.style.backgroundColor = '';
+            }
+
             gameState.board.splice(row, 1);
             gameState.board.unshift(Array(COLS).fill(0));
             linesCleared++;
@@ -291,10 +314,19 @@ function checkLines() {
     }
 
     if (linesCleared > 0) {
-        gameState.score += linesCleared * 100 * (gameState.level + 1);
-        gameState.level += linesCleared
+        for (let row = 0; row < ROWS; row++) {
+            for (let col = 0; col < COLS; col++) {
+                const index = row * COLS + col;
+                const block = document.getElementById(index);
+                if (block) {
+                    block.style.backgroundColor = gameState.board[row][col] || '';
+                }
+            }
+        }
 
-        updateStats(gameState.score, gameState.level)
+        gameState.score += linesCleared * 100 * (gameState.level + 1);
+        gameState.level += linesCleared;
+        updateStats(gameState.score, gameState.level);
     }
 }
 export function startMenu() {

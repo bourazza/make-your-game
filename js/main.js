@@ -37,7 +37,7 @@ function createBoard() {
         tet[0].appendChild(dive)
     }
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 60; i++) {
         let dive = document.createElement('div')
         dive.id = i
         expected[0].appendChild(dive)
@@ -161,10 +161,8 @@ function setupControls() {
 }
 
 function moveTetromino(lStartY = startY, lStartX = startX) {
-    // should clear only the divs that the piece are in not all the 200 one
     clearBoard()
 
-    // to respawn the pieces after clearing the board
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
             if (gameState.board[row][col] !== 0) {
@@ -201,6 +199,7 @@ function placeTetromino() {
         }
     }
 }
+
 
 function spawnNewPiece() {
     startY = 0;

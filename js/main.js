@@ -52,6 +52,7 @@ function loadTetromioes() {
             generateNewTetromino();
             gameLoop()
         })
+        
         .catch(error => console.error('Error loading shapes:', error));
 }
 
@@ -62,52 +63,11 @@ function generateNewTetromino() {
     gameState.currentTetromino = tetrominoes[randomPiece]
 }
 
-function setupControls() {
-    document.addEventListener('keydown', (e) => {
-        if (gameState.paused || gameState.gameOver) return
-
-        switch (e.code) {
-            case 'ArrowRight':
-                if (startX < COLS - gameState.currentTetromino.rotations[position].width) {
-                    startX += 1
-                    if (startX < 0 || startX + getCurrentPieceWidth() > COLS) { break }
-                    moveTetromino(startY, startX)
-                }
-                break
-            case 'ArrowLeft':
-                if (startX > 0) {
-                    startX -= 1
-                    if (startX < 0) { break }
-                    moveTetromino(startY, startX)
-                }
-                break
-            case 'ArrowDown':
-                position -= 1;
-                if (position < 0) {
-                    position = 3;
-                }
-                moveTetromino()
-                break;
-            case 'ArrowUp':
-                position += 1
-                if (position == 4) {
-                    position = 0
-                }
-                moveTetromino()
-                break
-        }
-    })
 
 
-}
 
-function getCurrentPieceWidth() {
-    return gameState.currentTetromino.rotations[position].width
-}
 
-function getCurrentPieceHeight() {
-    return gameState.currentTetromino.rotations[position].height
-}
+
 
 function clearBoard() {
     for (let i = 0; i < 200; i++) {
@@ -118,24 +78,81 @@ function clearBoard() {
     }
 }
 
-let counter = 0
 let dropTimer = 0
+function checkCollision(testY, testX, testPosition = position) {
+    const rotation = gameState.currentTetromino.rotations[testPosition].shape;
+    
+    for (let row = 0; row < rotation.length; row++) {
+        for (let col = 0; col < rotation[row].length; col++) {
+            if (rotation[row][col] === 1) {
+                const boardY = testY + row;
+                const boardX = testX + col;
+                
+                if (boardX < 0 || boardX >= COLS || boardY >= ROWS) {
+                    return true; 
+                }
+                
+                if (boardY >= 0 && gameState.board[boardY][boardX] !== 0) {
+                    return true; 
+                }
+            }
+        }
+    }
+    return false; 
+}
 function gameLoop() {
     if (!gameState.gameOver && !gameState.paused) {
         dropTimer += 222
         if (dropTimer > 1000) {
-            if (counter <= (ROWS - getCurrentPieceHeight())) {
-                startY = counter
-                moveTetromino(counter)
-                counter++
+            if (!checkCollision(startY + 1, startX)) {
+                startY++;
+                moveTetromino(startY, startX);
             } else {
-                placeTetromino()
-                spawnNewPiece()
+                placeTetromino();
+                checkLines(); 
+                spawnNewPiece();
             }
             dropTimer = 0
         }
     }
     requestAnimationFrame(gameLoop)
+}
+function setupControls() {
+    document.addEventListener('keydown', (e) => {
+        if (gameState.paused || gameState.gameOver) return
+
+        switch (e.code) {
+            case 'ArrowRight':
+                if (!checkCollision(startY, startX + 1)) {
+                    startX += 1;
+                    moveTetromino(startY, startX);
+                }
+                break;
+            case 'ArrowLeft':
+                if (!checkCollision(startY, startX - 1)) {
+                    startX -= 1;
+                    moveTetromino(startY, startX);
+                }
+                break;
+            case 'ArrowDown':
+                if (!checkCollision(startY + 1, startX)) {
+                    startY++;
+                    moveTetromino(startY, startX);
+                } else {
+                    placeTetromino();
+                    checkLines();
+                    spawnNewPiece();
+                }
+                break;
+            case 'ArrowUp':
+                const newPosition = (position + 1) % 4;
+                if (!checkCollision(startY, startX, newPosition)) {
+                    position = newPosition;
+                    moveTetromino(startY, startX);
+                }
+                break;
+        }
+    })
 }
 
 function moveTetromino(lStartY = startY, lStartX = startX) {
@@ -179,9 +196,29 @@ function placeTetromino() {
 }
 
 function spawnNewPiece() {
-    counter = 0;
     startY = 0;
     startX = 4;
     position = 0;
     generateNewTetromino();
+    
+    if (checkCollision(startY, startX)) {
+        gameState.gameOver = true;
+        console.log("Game Over!");
+    }
+}
+function checkLines() {
+    let linesCleared = 0;
+    
+    for (let row = ROWS - 1; row >= 0; row--) {
+        if (gameState.board[row].every(cell => cell !== 0)) {
+            gameState.board.splice(row, 1);
+            gameState.board.unshift(Array(COLS).fill(0));
+            linesCleared++;
+            row++; 
+        }
+    }
+    
+    if (linesCleared > 0) {
+        gameState.score += linesCleared * 100 * (gameState.level + 1);
+    }
 }

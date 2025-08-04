@@ -2,6 +2,7 @@ import { menuFunction, updateStats } from "./ui.js"
 
 export const COLS = 10
 export const ROWS = 20
+export let pause=0
 let position = 0
 let startX = 4;
 let startY = 0;
@@ -56,6 +57,7 @@ function initialize() {
     menuFunction();
 }
 
+
 function loadTetromioes() {
     clearBoard()
     fetch('js/tetrisshapes.json').then(response => response.json())
@@ -75,12 +77,12 @@ export function generateNewTetromino() {
 const n = Math.floor(Math.random() * pieces.length)
     randomPiece = pieces[n]
     next=pieces[ Math.floor(Math.random() * pieces.length)]
-    console.log(next)
+  
     k=1
 
     }else{
         randomPiece =next
-        console.log(randomPiece)
+
         next=pieces[ Math.floor(Math.random() * pieces.length)]
 
 
@@ -88,7 +90,6 @@ const n = Math.floor(Math.random() * pieces.length)
    
     
     gameState.currentTetromino = tetrominoes[randomPiece]
-    console.log(gameState.currentTetromino )
 }
 
 export function clearBoard() {
@@ -100,7 +101,7 @@ export function clearBoard() {
     }
 }
 
-function checkCollision(testY, testX, testPosition = position) {
+export function checkCollision(testY, testX, testPosition = position) {
     const rotation = gameState.currentTetromino.rotations[testPosition].shape;
 
     for (let row = 0; row < rotation.length; row++) {
@@ -123,7 +124,14 @@ function checkCollision(testY, testX, testPosition = position) {
 }
 
 let dropSpeed = 0
-function gameLoop() {
+export function gameLoop(arg) {
+    console.log(typeof arg)
+    if (arg===0){
+        startY=arg
+        console.log('startY')
+        
+    }
+    
     if (!gameState.gameOver && !gameState.paused) {
         dropSpeed += 22
         if (dropSpeed > getUpdatedInterval()) {
@@ -194,18 +202,23 @@ function setupControls() {
     })
 }
 
-function moveTetromino(lStartY = startY, lStartX = startX) {
+export function moveTetromino(lStartY = startY, lStartX = startX) {
     
     clearBoard()
 
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
-            if (gameState.board[row][col] !== 0) {
+            if (pause===1){
+                break
+
+            }else if (gameState.board[row][col] !== 0) {
                 const index = row * COLS + col;
                 const block = document.getElementById(index);
                 if (block) block.style.backgroundColor = gameState.board[row][col];
             }
+          
         }
+       
     }
 
     const rotation = gameState.currentTetromino.rotations[position].shape;

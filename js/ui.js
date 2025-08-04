@@ -1,4 +1,4 @@
-import { gameState,clearBoard,generateNewTetromino,ROWS,COLS} from "./main.js"
+import { gameState,clearBoard,generateNewTetromino,ROWS,COLS,moveTetromino,gameLoop} from "./main.js"
 
 
 export const menuFunction = () => {
@@ -37,11 +37,11 @@ export function rGame() {
     gameState.paused = false;
     gameState.gameOver = false;
 
-    startX = 4;
-    startY = 0;
-    position = 0;
-    k = 0;
-
+    let startX = 4;
+    let startY = 0;
+    let k = 0;
+    gameLoop(0)
+    moveTetromino(startY, startX)
     clearBoard();
     updateStats(0, 1);
     generateNewTetromino();

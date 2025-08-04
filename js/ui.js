@@ -33,6 +33,7 @@ export function rGame() {
     gameState.board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
     gameState.score = 0;
     gameState.level = 1;
+    updateStats(gameState.score,gameState.level )
     gameState.paused = false;
     gameState.gameOver = false;
 

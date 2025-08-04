@@ -39,7 +39,7 @@ function createBoard() {
 
     for (let i = 0; i < 60; i++) {
         let dive = document.createElement('div')
-        dive.id = i
+        dive.id = "next"+i
         expected[0].appendChild(dive)
     }
     menuFunction();
@@ -103,6 +103,7 @@ function gameLoop() {
             if (!checkCollision(startY + 1, startX)) {
                 startY++;
                 moveTetromino(startY, startX);
+                nextTetromino()
             } else {
                 placeTetromino();
                 checkLines();
@@ -180,7 +181,35 @@ function moveTetromino(lStartY = startY, lStartX = startX) {
             if (rotation[row][col] == 1) {
                 const index = (lStartY + row) * COLS + (lStartX + col);
                 const block = document.getElementById(index)
+               
                 if (block) block.style.backgroundColor = gameState.currentTetromino.color;
+            }
+        }
+    }
+}
+function nextTetromino(){
+     const PREVIEW_COLS = 4;
+    const PREVIEW_ROWS = 4;
+    
+    for (let i = 0; i < PREVIEW_ROWS * PREVIEW_COLS; i++) {
+        const cell = document.getElementById("next" + i);
+        if (cell) cell.style.backgroundColor = "";
+    }
+    
+    const shape = gameState.currentTetromino.rotations[0].shape;
+    const color = gameState.currentTetromino.color;
+    
+    
+    const offsetX = Math.floor((PREVIEW_COLS - shape[0].length) / 2);
+    const offsetY = Math.floor((PREVIEW_ROWS - shape.length) / 2);
+    
+    
+    for (let row = 0; row < shape.length; row++) {
+        for (let col = 0; col < shape[row].length; col++) {
+            if (shape[row][col] == 1) {
+                const index = (offsetY + row) * PREVIEW_COLS + (offsetX + col);
+                const cell = document.getElementById("next" + index);
+                if (cell) cell.style.backgroundColor = color;
             }
         }
     }

@@ -1,13 +1,17 @@
 import { menuFunction, updateStats } from "./ui.js"
 
-const COLS = 10
-const ROWS = 20
+export const COLS = 10
+export const ROWS = 20
+export let pause = 0
 let position = 0
 let startX = 4;
 let startY = 0;
+var k = 0
+let randomPiece = null
+let next = null
 let tetrominoes = {};
 
-let gameState = {
+export let gameState = {
     board: Array(ROWS).fill().map(() => Array(COLS).fill(0)),
     currentTetromino: null,
     paused: false,
@@ -15,10 +19,11 @@ let gameState = {
     score: 0,
     level: 1,
     dropSpeed: 0,
+    next: null
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    initialize();
+    startMenu()
 })
 
 function initialize() {
@@ -30,6 +35,8 @@ function initialize() {
 function createBoard() {
     let tet = document.getElementsByClassName('tetris-header')
     let expected = document.getElementsByClassName('tetris-predicted')
+    let expected2 = document.getElementsByClassName('tetris-predicted2')
+
 
     for (let i = 0; i < 200; i++) {
         let dive = document.createElement('div')
@@ -39,11 +46,17 @@ function createBoard() {
 
     for (let i = 0; i < 20; i++) {
         let dive = document.createElement('div')
-        dive.id = i
+        dive.id = "next" + i
         expected[0].appendChild(dive)
+    }
+    for (let i = 0; i < 20; i++) {
+        let dive = document.createElement('div')
+        dive.id = "next2" + i
+        expected2[0].appendChild(dive)
     }
     menuFunction();
 }
+
 
 function loadTetromioes() {
     clearBoard()
@@ -57,14 +70,22 @@ function loadTetromioes() {
         .catch(error => console.error('Error loading shapes:', error));
 }
 
-function generateNewTetromino() {
+export function generateNewTetromino() {
     const pieces = Object.keys(tetrominoes)
-    const n = Math.floor(Math.random() * pieces.length)
-    const randomPiece = pieces[n]
+
+    if (k === 0) {
+        const n = Math.floor(Math.random() * pieces.length)
+        randomPiece = pieces[n]
+        next = pieces[Math.floor(Math.random() * pieces.length)]
+        k = 1
+    } else {
+        randomPiece = next
+        next = pieces[Math.floor(Math.random() * pieces.length)]
+    }
     gameState.currentTetromino = tetrominoes[randomPiece]
 }
 
-function clearBoard() {
+export function clearBoard() {
     for (let i = 0; i < 200; i++) {
         const cell = document.getElementById(i);
         if (cell) {
@@ -73,7 +94,7 @@ function clearBoard() {
     }
 }
 
-function checkCollision(testY, testX, testPosition = position) {
+export function checkCollision(testY, testX, testPosition = position) {
     const rotation = gameState.currentTetromino.rotations[testPosition].shape;
 
     for (let row = 0; row < rotation.length; row++) {
@@ -96,14 +117,19 @@ function checkCollision(testY, testX, testPosition = position) {
 }
 
 let dropSpeed = 0
-function gameLoop() {
+export function gameLoop(arg) {
+    if (arg === 0) {
+        startY = arg
+    }
+
     if (!gameState.gameOver && !gameState.paused) {
         dropSpeed += 22
         if (dropSpeed > getUpdatedInterval()) {
             if (!checkCollision(startY + 1, startX)) {
                 startY++;
-                clearBlocks(startY - 1, startX)
                 moveTetromino(startY, startX);
+                nextTetromino('next', tetrominoes[randomPiece])
+                nextTetromino('next2', tetrominoes[next])
             } else {
                 placeTetromino();
                 checkLines();
@@ -129,21 +155,18 @@ function setupControls() {
             case 'ArrowRight':
                 if (!checkCollision(startY, startX + 1)) {
                     startX += 1;
-                    clearBlocks(startY, startX - 1)
                     moveTetromino(startY, startX);
                 }
                 break;
             case 'ArrowLeft':
                 if (!checkCollision(startY, startX - 1)) {
                     startX -= 1;
-                    clearBlocks(startY, startX + 1)
                     moveTetromino(startY, startX);
                 }
                 break;
             case 'ArrowDown':
                 if (!checkCollision(startY + 1, startX)) {
                     startY += 1;
-                    clearBlocks(startY - 1, startX)
                     moveTetromino(startY, startX);
                     gameState.score += 2
                     updateStats(gameState.score, gameState.level)
@@ -156,43 +179,37 @@ function setupControls() {
             case 'ArrowUp':
                 const newPosition = (position + 1) % 4;
                 if (!checkCollision(startY, startX, newPosition)) {
-                    clearBlocks(startY, startX)
                     position = newPosition;
                     moveTetromino(startY, startX);
                 }
                 break;
+            case 'KeyP':
+                pauseGame()
+                break;
+
+
         }
     })
 }
 
-function clearBlocks(y, x) {
-    const rotation = gameState.currentTetromino.rotations[position].shape;
-    for (let row = 0; row < rotation.length; row++) {
-        for (let col = 0; col < rotation[row].length; col++) {
-            if (rotation[row][col] == 1) {
-                const index = (y + row) * COLS + (x + col)
-                const block = document.getElementById(index)
-                if (block) block.style.backgroundColor = ''
+export function moveTetromino(lStartY = startY, lStartX = startX) {
+
+    clearBoard()
+
+    for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+            if (pause === 1) {
+                break
+
+            } else if (gameState.board[row][col] !== 0) {
+                const index = row * COLS + col;
+                const block = document.getElementById(index);
+                if (block) block.style.backgroundColor = gameState.board[row][col];
             }
 
         }
+
     }
-}
-
-function moveTetromino(lStartY = startY, lStartX = startX) {
-    // should clear only the divs that the piece are in not all the 200 one
-    // clearBoard()
-
-    // to respawn the pieces after clearing the board
-    // for (let row = 0; row < ROWS; row++) {
-    //     for (let col = 0; col < COLS; col++) {
-    //         if (gameState.board[row][col] !== 0) {
-    //             const index = row * COLS + col;
-    //             const block = document.getElementById(index);
-    //             if (block) block.style.backgroundColor = gameState.board[row][col];
-    //         }
-    //     }
-    // }
 
     const rotation = gameState.currentTetromino.rotations[position].shape;
 
@@ -201,7 +218,35 @@ function moveTetromino(lStartY = startY, lStartX = startX) {
             if (rotation[row][col] == 1) {
                 const index = (lStartY + row) * COLS + (lStartX + col);
                 const block = document.getElementById(index)
+
                 if (block) block.style.backgroundColor = gameState.currentTetromino.color;
+            }
+        }
+    }
+}
+function nextTetromino(id, g) {
+    const PREVIEW_COLS = 4;
+    const PREVIEW_ROWS = 4;
+
+    for (let i = 0; i < PREVIEW_ROWS * PREVIEW_COLS; i++) {
+        const cell = document.getElementById(id + i);
+        if (cell) cell.style.backgroundColor = "";
+    }
+
+    const shape = g.rotations[0].shape;
+    const color = g.color;
+
+
+    const offsetX = Math.floor((PREVIEW_COLS - shape[0].length) / 2);
+    const offsetY = Math.floor((PREVIEW_ROWS - shape.length) / 2);
+
+
+    for (let row = 0; row < shape.length; row++) {
+        for (let col = 0; col < shape[row].length; col++) {
+            if (shape[row][col] == 1) {
+                const index = (offsetY + row) * PREVIEW_COLS + (offsetX + col);
+                const cell = document.getElementById(id + index);
+                if (cell) cell.style.backgroundColor = color;
             }
         }
     }
@@ -221,6 +266,7 @@ function placeTetromino() {
     }
 }
 
+
 function spawnNewPiece() {
     startY = 0;
     startX = 4;
@@ -232,18 +278,11 @@ function spawnNewPiece() {
         console.log("Game Over!");
     }
 }
-
 function checkLines() {
     let linesCleared = 0;
 
     for (let row = ROWS - 1; row >= 0; row--) {
         if (gameState.board[row].every(cell => cell !== 0)) {
-            for (let col = 0; col < COLS; col++) {
-                const index = row * COLS + col;
-                const block = document.getElementById(index);
-                if (block) block.style.backgroundColor = '';
-            }
-
             gameState.board.splice(row, 1);
             gameState.board.unshift(Array(COLS).fill(0));
             linesCleared++;
@@ -252,18 +291,45 @@ function checkLines() {
     }
 
     if (linesCleared > 0) {
-        for (let row = 0; row < ROWS; row++) {
-            for (let col = 0; col < COLS; col++) {
-                const index = row * COLS + col;
-                const block = document.getElementById(index);
-                if (block) {
-                    block.style.backgroundColor = gameState.board[row][col] || '';
-                }
-            }
-        }
-
         gameState.score += linesCleared * 100 * (gameState.level + 1);
-        gameState.level += linesCleared;
-        updateStats(gameState.score, gameState.level);
+        gameState.level += linesCleared
+
+        updateStats(gameState.score, gameState.level)
+    }
+}
+export function startMenu() {
+    const startMenu = document.getElementById("startMenu");
+    const startBtn = document.getElementById("startBtn");
+    const countdown = document.getElementById("countdown");
+
+    startBtn.addEventListener("click", () => {
+        startMenu.style.display = "none";
+        startCountdown();
+    });
+
+    function startCountdown() {
+        let count = 3;
+        countdown.style.display = "block";
+        countdown.textContent = count;
+
+        const interval = setInterval(() => {
+            count--;
+            if (count >= 0) {
+                countdown.textContent = count;
+            } else {
+                clearInterval(interval);
+                countdown.style.display = "none";
+                initialize();
+
+            }
+        }, 1000);
+    }
+}
+function pauseGame() {
+    gameState.paused = !gameState.paused;
+
+    const pauseMenu = document.querySelector('.pause-menu');
+    if (pauseMenu) {
+        pauseMenu.style.display = gameState.paused ? 'flex' : 'none';
     }
 }

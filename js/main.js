@@ -59,7 +59,7 @@ function createBoard() {
 
 
 function loadTetromioes() {
-    clearBoard()
+   clearBlocks()
     fetch('js/tetrisshapes.json').then(response => response.json())
         .then(data => {
             tetrominoes = data.tetrominoes;
@@ -194,7 +194,7 @@ function setupControls() {
 
 export function moveTetromino(lStartY = startY, lStartX = startX) {
 
-    clearBoard()
+     clearBlocks(lStartY, lStartX);
 
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
@@ -332,4 +332,24 @@ function pauseGame() {
     if (pauseMenu) {
         pauseMenu.style.display = gameState.paused ? 'flex' : 'none';
     }
+}
+function clearBlocks(y = null, x = null) {
+    if (y === null || x === null) {
+        for (let i = 0; i < ROWS * COLS; i++) {
+            const cell = document.getElementById(i);
+            if (cell) cell.style.backgroundColor = '';
+        }
+    } else {
+        const rotation = gameState.currentTetromino.rotations[position].shape;
+        for (let row = 0; row < rotation.length; row++) {
+            for (let col = 0; col < rotation[row].length; col++) {
+                if (rotation[row][col] == 1) {
+                    const index = (y + row) * COLS + (x + col);
+                    const block = document.getElementById(index);
+                    if (block) block.style.backgroundColor = '';
+                }
+            }
+        }
+    }
+     
 }

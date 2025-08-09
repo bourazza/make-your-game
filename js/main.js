@@ -2,13 +2,12 @@ import { menuFunction, updateStats } from "./ui.js"
 
 export const COLS = 10
 export const ROWS = 20
-export let pause=0
+export let pause = 0
 let position = 0
 let startX = 4;
-let startY = -2;
-var k=0
-   let randomPiece =null
-     let next =null
+let startY = 0;
+let randomPiece = null
+let next = null
 let tetrominoes = {};
 
 export let gameState = {
@@ -19,7 +18,7 @@ export let gameState = {
     score: 0,
     level: 1,
     dropSpeed: 0,
-    next :null
+    next: null
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -32,34 +31,36 @@ function initialize() {
     setupControls()
 }
 
- function createBoard() {
-    let tet = document.getElementsByClassName('tetris-header')
-    let expected = document.getElementsByClassName('tetris-predicted')
-        let expected2 = document.getElementsByClassName('tetris-predected2')
-
+function createBoard() {
+    let tet = document.querySelector('.tetris-header')
+    //let tet = document.getElementsByClassName('tetris-header')
+    let expected = document.querySelector('.this-tetris')
+    let expected2 = document.querySelector('.tetris-predicted')
 
     for (let i = 0; i < 200; i++) {
         let dive = document.createElement('div')
         dive.id = i
-        tet[0].appendChild(dive)
+        tet.appendChild(dive) 
     }
 
     for (let i = 0; i < 20; i++) {
         let dive = document.createElement('div')
-        dive.id = "next"+i
-        expected[0].appendChild(dive)
+        dive.id = "next" + i
+        expected.appendChild(dive)
     }
-     for (let i = 0; i < 20; i++) {
+
+    for (let i = 0; i < 20; i++) {
         let dive = document.createElement('div')
-        dive.id = "next2"+i
-        expected2[0].appendChild(dive)
+        dive.id = "next2" + i
+        expected2.appendChild(dive)
     }
+
     menuFunction();
 }
 
 
 function loadTetromioes() {
-    clearBoard()
+   clearBlocks()
     fetch('js/tetrisshapes.json').then(response => response.json())
         .then(data => {
             tetrominoes = data.tetrominoes;
@@ -70,25 +71,17 @@ function loadTetromioes() {
         .catch(error => console.error('Error loading shapes:', error));
 }
 
+
+//change the genrate check logic
 export function generateNewTetromino() {
-     const pieces = Object.keys(tetrominoes)
-  
-    if(k ===0){
-const n = Math.floor(Math.random() * pieces.length)
-    randomPiece = pieces[n]
-    next=pieces[ Math.floor(Math.random() * pieces.length)]
-  
-    k=1
-
-    }else{
-        randomPiece =next
-
-        next=pieces[ Math.floor(Math.random() * pieces.length)]
-
-
+    const pieces = Object.keys(tetrominoes)
+    if (randomPiece === null) {
+        randomPiece = pieces[Math.floor(Math.random() * pieces.length)]
+        next = pieces[Math.floor(Math.random() * pieces.length)]
+    } else {
+        randomPiece = next
+        next = pieces[Math.floor(Math.random() * pieces.length)]
     }
-   
-    
     gameState.currentTetromino = tetrominoes[randomPiece]
 }
 
@@ -125,21 +118,18 @@ export function checkCollision(testY, testX, testPosition = position) {
 
 let dropSpeed = 0
 export function gameLoop(arg) {
-    console.log(typeof arg)
-    if (arg===0){
-        startY=arg
-        console.log('startY')
-        
+    if (arg === 0) {
+        startY = arg
     }
-    
+
     if (!gameState.gameOver && !gameState.paused) {
         dropSpeed += 22
         if (dropSpeed > getUpdatedInterval()) {
             if (!checkCollision(startY + 1, startX)) {
                 startY++;
                 moveTetromino(startY, startX);
-                nextTetromino('next',tetrominoes[randomPiece])
-                 nextTetromino('next2',tetrominoes[next])
+                nextTetromino('next', tetrominoes[randomPiece])
+                nextTetromino('next2', tetrominoes[next])
             } else {
                 placeTetromino();
                 checkLines();
@@ -193,32 +183,32 @@ function setupControls() {
                     moveTetromino(startY, startX);
                 }
                 break;
-             case 'KeyP':
-                pauseGame() 
+            case 'KeyP':
+                pauseGame()
                 break;
-                    
+
 
         }
     })
 }
 
 export function moveTetromino(lStartY = startY, lStartX = startX) {
-    
-    clearBoard()
+
+     clearBlocks(lStartY, lStartX);
 
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
-            if (pause===1){
+            if (pause === 1) {
                 break
 
-            }else if (gameState.board[row][col] !== 0) {
+            } else if (gameState.board[row][col] !== 0) {
                 const index = row * COLS + col;
                 const block = document.getElementById(index);
                 if (block) block.style.backgroundColor = gameState.board[row][col];
             }
-          
+
         }
-       
+
     }
 
     const rotation = gameState.currentTetromino.rotations[position].shape;
@@ -228,29 +218,30 @@ export function moveTetromino(lStartY = startY, lStartX = startX) {
             if (rotation[row][col] == 1) {
                 const index = (lStartY + row) * COLS + (lStartX + col);
                 const block = document.getElementById(index)
-               
+
                 if (block) block.style.backgroundColor = gameState.currentTetromino.color;
             }
         }
     }
 }
-function nextTetromino(id,g){
-     const PREVIEW_COLS = 4;
+
+function nextTetromino(id, g) {
+    const PREVIEW_COLS = 4;
     const PREVIEW_ROWS = 4;
-    
+
     for (let i = 0; i < PREVIEW_ROWS * PREVIEW_COLS; i++) {
         const cell = document.getElementById(id + i);
         if (cell) cell.style.backgroundColor = "";
     }
-    
+
     const shape = g.rotations[0].shape;
     const color = g.color;
-    
-    
+
+
     const offsetX = Math.floor((PREVIEW_COLS - shape[0].length) / 2);
     const offsetY = Math.floor((PREVIEW_ROWS - shape.length) / 2);
-    
-    
+
+
     for (let row = 0; row < shape.length; row++) {
         for (let col = 0; col < shape[row].length; col++) {
             if (shape[row][col] == 1) {
@@ -276,7 +267,7 @@ function placeTetromino() {
     }
 }
 
-
+// this is for generate new pices
 function spawnNewPiece() {
     startY = 0;
     startX = 4;
@@ -288,6 +279,8 @@ function spawnNewPiece() {
         console.log("Game Over!");
     }
 }
+
+
 function checkLines() {
     let linesCleared = 0;
 
@@ -307,6 +300,8 @@ function checkLines() {
         updateStats(gameState.score, gameState.level)
     }
 }
+
+// the game lunch 
 export function startMenu() {
     const startMenu = document.getElementById("startMenu");
     const startBtn = document.getElementById("startBtn");
@@ -314,7 +309,8 @@ export function startMenu() {
 
     startBtn.addEventListener("click", () => {
         startMenu.style.display = "none";
-        startCountdown();
+        initialize();
+        //startCountdown();
     });
 
     function startCountdown() {
@@ -329,12 +325,13 @@ export function startMenu() {
             } else {
                 clearInterval(interval);
                 countdown.style.display = "none";
-                   initialize();
+                initialize();
 
             }
         }, 1000);
     }
 }
+
 function pauseGame() {
     gameState.paused = !gameState.paused;
 
@@ -343,4 +340,23 @@ function pauseGame() {
         pauseMenu.style.display = gameState.paused ? 'flex' : 'none';
     }
 }
-    
+function clearBlocks(y = null, x = null) {
+    if (y === null || x === null) {
+        for (let i = 0; i < ROWS * COLS; i++) {
+            const cell = document.getElementById(i);
+            if (cell) cell.style.backgroundColor = '';
+        }
+    } else {
+        const rotation = gameState.currentTetromino.rotations[position].shape;
+        for (let row = 0; row < rotation.length; row++) {
+            for (let col = 0; col < rotation[row].length; col++) {
+                if (rotation[row][col] == 1) {
+                    const index = (y + row) * COLS + (x + col);
+                    const block = document.getElementById(index);
+                    if (block) block.style.backgroundColor = '';
+                }
+            }
+        }
+    }
+     
+}

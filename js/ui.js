@@ -1,4 +1,4 @@
-import { gameState,clearBoard,generateNewTetromino,ROWS,COLS,moveTetromino,gameLoop} from "./main.js"
+import { gameState, clearBoard, generateNewTetromino, ROWS, COLS, moveTetromino, gameLoop } from "./main.js"
 
 
 export const menuFunction = () => {
@@ -10,10 +10,11 @@ export const menuFunction = () => {
     menuButton.addEventListener('click', () => {
         pauseMenu.style.display = 'flex'
     })
-continueButton.addEventListener('click', () => {
-    pauseMenu.style.display = 'none'
-    gameState.paused = false
-})
+
+    continueButton.addEventListener('click', () => {
+        pauseMenu.style.display = 'none'
+        gameState.paused = false
+    })
 
 
     restartButton.addEventListener('click', () => {
@@ -29,11 +30,12 @@ export const updateStats = (newScore, newLevel) => {
     scoreCounter.textContent = newScore;
     levelCounter.textContent = newLevel;
 }
+
 export function rGame() {
     gameState.board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
     gameState.score = 0;
     gameState.level = 1;
-    updateStats(gameState.score,gameState.level )
+    updateStats(gameState.score, gameState.level)
     gameState.paused = false;
     gameState.gameOver = false;
 
@@ -46,4 +48,3 @@ export function rGame() {
     updateStats(0, 1);
     generateNewTetromino();
 }
-

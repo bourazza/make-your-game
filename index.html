@@ -10,43 +10,48 @@
 
 <body>
     <!-- Start Menu -->
-<div id="startMenu" style="position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; background-color: rgba(0,0,0,0.8); z-index: 10;">
-    <button id="startBtn" style="font-size: 2rem; padding: 1rem 2rem;">Start Game</button>
-</div>
+    <div id="startMenu"
+        style="position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; background-color: rgba(0,0,0,0.8); z-index: 10;">
+        <button id="startBtn" style="font-size: 2rem; padding: 1rem 2rem;">Start Game</button>
+    </div>
 
-<!-- Countdown Popup -->
-<div id="countdown" style="display: none; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 5rem; color: white; background: rgba(0,0,0,0.7); padding: 1rem 2rem; border-radius: 1rem; z-index: 20;">
-    3
-</div>
+    <!-- Countdown Popup -->
+    <div id="countdown"
+        style="display: none; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 5rem; color: white; background: rgba(0,0,0,0.7); padding: 1rem 2rem; border-radius: 1rem; z-index: 20;">
+        3
+    </div>
 
     <div class="container">
         <div class="tetris-header"></div>
 
         <div class="right-column">
-            
+
             <div class="this-tetris"></div>
-             <div class="tasks">
-            <div class="tetris-predicted"></div>
+            <div class="tasks">
+                <div class="tetris-predicted"></div>
                 <div class="stat">
                     <h1>score</h1>
-                     <h4 id="scoreValue">0</h4>
+                    <h4 id="scoreValue">0</h4>
                     <h1>level</h1>
 
                     <h4 id="levelValue">0</h4>
                     <h1>line</h1>
 
                     <h4 id="lineValue">0</h4>
+
+                    <h1>Time</h1>
+                    <h4 id="TimeValue"><time datetime="00:00:00">00:00:00</time></h4>
                 </div>
-                   
-               
-        <div class="pause-menu">
-            <div class="continue-button">Continue</div>
-            <div class="restart-button">Restart</div>
-            
-        </div>
-    </div>
-    <div class="menu-button"></div>
-    <script src="js/main.js" type="module"></script>
+
+
+                <div class="pause-menu">
+                    <div class="continue-button">Continue</div>
+                    <div class="restart-button">Restart</div>
+
+                </div>
+            </div>
+            <div class="menu-button"></div>
+            <script src="js/main.js" type="module"></script>
 </body>
 
 </html>

@@ -117,10 +117,8 @@ export function checkCollision(testY, testX, testPosition = position) {
 }
 
 
-export function gameLoop(arg) {
-    if (arg === 0) {
-        startY = arg
-    }
+export function gameLoop() {
+    gameState.dropSpeed = 0;
     if (!gameState.gameOver && !gameState.paused) {
         gameState.dropSpeed += 22
         if (gameState.dropSpeed > getUpdatedInterval()) {
@@ -433,8 +431,8 @@ function rGame() {
     time = 0;
 
 
-    let startX = 4;
-    let startY = 0;
+    startX = 4;
+    startY = 0;
     gameLoop(0)
     moveTetromino(startY, startX)
     clearBoard();

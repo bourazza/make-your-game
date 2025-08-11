@@ -97,7 +97,7 @@ export function clearBoard() {
 function clearNext() {
     for (let i = 0; i < 20; i++) {
         const cell = document.getElementById("next2" + i);
-       if (cell) {
+        if (cell) {
             cell.style.backgroundColor = '';
         }
     }
@@ -192,14 +192,14 @@ function setupControls() {
                     clearBlocks(startY, startX);
                     position = newPosition;
                     moveTetromino(startY, startX);
-                } else if (!checkCollision(startY, startX - 1, newPosition)) {
+                } else if (!checkCollision(startY, startX -1, newPosition)) {
                     clearBlocks(startY, startX);
                     startX -= 1;
                     position = newPosition;
                     moveTetromino(startY, startX);
-                } else if (!checkCollision(startY, startX - 1, newPosition)) {
+                } else if (!checkCollision(startY, startX - gameState.currentTetromino.rotations[newPosition].width - 1, newPosition)) {
                     clearBlocks(startY, startX);
-                    startX -= 1;
+                    startX -= (gameState.currentTetromino.rotations[newPosition].width - 1);
                     position = newPosition;
                     moveTetromino(startY, startX);
                 }
@@ -220,9 +220,7 @@ function clearBlocks(y, x) {
                 const block = document.getElementById(index)
                 if (block) block.style.backgroundColor = ''
             }
-
         }
-
     }
 }
 

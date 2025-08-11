@@ -50,7 +50,7 @@ function createBoard() {
         expected.appendChild(dive)
     }
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 16; i++) {
         let dive = document.createElement('div')
         dive.id = "next2" + i
         expected2.appendChild(dive)

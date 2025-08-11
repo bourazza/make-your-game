@@ -81,12 +81,13 @@ body {
 
 .tetris-predicted, .tetris-predected2 {
   width: 155px;
-  height: 200px;
+  height: 155px;
   display: flex;
   flex-wrap: wrap;
   background-color: #000;
   border: 2px solid #fff;
-  border-radius: 4px;
+  border-radius: 2px;
+  margin: 1vh;
 }
 
 .tetris-header div {
@@ -97,7 +98,7 @@ body {
 
 .tetris-predicted div, .tetris-predected2 div {
   width: calc(100% / 4);
-  height: calc(100% / 5);
+  height: calc(100% / 4);
   border: 1px solid #333;
 }
 
@@ -109,6 +110,7 @@ body {
   border: 2px solid #fff;
   border-radius: 8px;
   padding: 10px;
+  margin: 1vh;
 }
 
 .stat h1 {
@@ -205,7 +207,7 @@ body {
   
   .tetris-predicted, .tetris-predected2 {
     width: clamp(100px, 22vw, 130px);
-    height: clamp(120px, 18vh, 160px);
+    height: clamp(100px, 18vh, 130px);
     margin: 5px;
     flex-shrink: 0;
   }
@@ -253,7 +255,7 @@ body {
   
   .tetris-predicted, .tetris-predected2 {
     width: clamp(120px, 30vw, 140px);
-    height: clamp(140px, 20vh, 170px);
+    height: clamp(120px, 20vh, 140px);
   }
   
   .stat {
@@ -277,7 +279,7 @@ body {
   
   .tetris-predicted, .tetris-predected2 {
     width: clamp(110px, 35vw, 130px);
-    height: clamp(130px, 22vh, 160px);
+    height: clamp(110px, 22vh, 130px);
     border-width: 2px;
   }
   
@@ -320,7 +322,7 @@ body {
   
   .tetris-predicted, .tetris-predected2 {
     width: clamp(90px, 40vw, 110px);
-    height: clamp(110px, 25vh, 140px);
+    height: clamp(90px, 25vh, 110px);
   }
   
   .stat {

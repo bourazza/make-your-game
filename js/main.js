@@ -9,7 +9,6 @@ let randomPiece = null
 let next = null
 let tetrominoes = {};
 let time = 0;
-let Lives = 3;
 
 let gameState = {
     board: Array(ROWS).fill().map(() => Array(COLS).fill(0)),
@@ -19,7 +18,8 @@ let gameState = {
     score: 0,
     level: 1,
     dropSpeed: 0,
-    next: null
+    next: null,
+    Lives: 3
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -94,7 +94,17 @@ export function clearBoard() {
     }
 }
 
-export function checkCollision(testY, testX, testPosition = position) {
+function clearNext() {
+    for (let i = 0; i < 20; i++) {
+        const cell = document.getElementById("next2" + i);
+       if (cell) {
+            cell.style.backgroundColor = '';
+        }
+    }
+}
+
+
+function checkCollision(testY, testX, testPosition = position) {
     const rotation = gameState.currentTetromino.rotations[testPosition].shape;
 
     for (let row = 0; row < rotation.length; row++) {
@@ -118,7 +128,7 @@ export function checkCollision(testY, testX, testPosition = position) {
 
 
 export function gameLoop() {
-    gameState.dropSpeed = 0;
+    // gameState.dropSpeed = 0;
     if (!gameState.gameOver && !gameState.paused) {
         gameState.dropSpeed += 22
         if (gameState.dropSpeed > getUpdatedInterval()) {
@@ -279,10 +289,10 @@ function spawnNewPiece() {
     generateNewTetromino();
 
     if (checkCollision(startY, startX)) {
-        Lives = Lives - 1;
-        if (Lives != 0) {
+        gameState.Lives = gameState.Lives - 1;
+        if (gameState.Lives != 0) {
             let life = document.querySelector('#liveValue')
-            life.textContent = Lives;
+            life.textContent = gameState.Lives;
             gameState.board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
             clearBoard()
         } else {
@@ -414,11 +424,13 @@ function setTimer() {
 }
 
 
-const updateStats = (newScore, newLevel) => {
+const updateStats = () => {
     const scoreCounter = document.getElementById('scoreValue')
     const levelCounter = document.getElementById('levelValue')
-    scoreCounter.textContent = newScore;
-    levelCounter.textContent = newLevel;
+    const life = document.getElementById('liveValue')
+    scoreCounter.textContent = gameState.score;
+    levelCounter.textContent = gameState.level;
+    life.textContent = gameState.Lives
 }
 
 function rGame() {
@@ -428,15 +440,15 @@ function rGame() {
     gameState.dropSpeed = 0;
     gameState.paused = false;
     gameState.gameOver = false;
+    gameState.Lives = 3;
     time = 0;
-
-
     startX = 4;
     startY = 0;
-    gameLoop(0)
+    generateNewTetromino();
+    generateNewTetromino();
     moveTetromino(startY, startX)
     clearBoard();
+    clearNext();
     updateStats(0, 0);
-    generateNewTetromino();
 }
 

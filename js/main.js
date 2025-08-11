@@ -3,12 +3,13 @@ export const COLS = 10
 export const ROWS = 20
 export let pause = 0
 let position = 0
-let startX = 4;
+let startX = 4
 let startY = 0;
 let randomPiece = null
 let next = null
 let tetrominoes = {};
 let time = 0;
+let Lives = 3;
 
 let gameState = {
     board: Array(ROWS).fill().map(() => Array(COLS).fill(0)),
@@ -81,6 +82,7 @@ export function generateNewTetromino() {
         next = pieces[Math.floor(Math.random() * pieces.length)]
     }
     gameState.currentTetromino = tetrominoes[randomPiece]
+
 }
 
 export function clearBoard() {
@@ -120,7 +122,7 @@ export function gameLoop(arg) {
         startY = arg
     }
     if (!gameState.gameOver && !gameState.paused) {
-         gameState.dropSpeed += 22
+        gameState.dropSpeed += 22
         if (gameState.dropSpeed > getUpdatedInterval()) {
             if (!checkCollision(startY + 1, startX)) {
                 startY++;
@@ -133,8 +135,8 @@ export function gameLoop(arg) {
                 checkLines();
                 spawnNewPiece();
             }
-           gameState.dropSpeed = 0
-        } 
+            gameState.dropSpeed = 0
+        }
     }
     requestAnimationFrame(gameLoop)
 }
@@ -147,7 +149,7 @@ function getUpdatedInterval() {
 
 function setupControls() {
     document.addEventListener('keydown', (e) => {
-        if (gameState.paused || gameState.gameOver) return
+        if ((gameState.paused && e.code != 'KeyP') || gameState.gameOver) return
         switch (e.code) {
             case 'ArrowRight':
                 if (!checkCollision(startY, startX + 1)) {
@@ -180,6 +182,11 @@ function setupControls() {
                 const newPosition = (position + 1) % 4;
                 if (!checkCollision(startY, startX, newPosition)) {
                     clearBlocks(startY, startX);
+                    position = newPosition;
+                    moveTetromino(startY, startX);
+                } else if (!checkCollision(startY, startX - 1, newPosition)) {
+                    clearBlocks(startY, startX);
+                    startX -= 1;
                     position = newPosition;
                     moveTetromino(startY, startX);
                 } else if (!checkCollision(startY, startX - 1, newPosition)) {
@@ -274,14 +281,22 @@ function spawnNewPiece() {
     generateNewTetromino();
 
     if (checkCollision(startY, startX)) {
-        gameState.gameOver = true;
-        console.log("Game Over!");
+        Lives = Lives - 1;
+        if (Lives != 0) {
+            let life = document.querySelector('#liveValue')
+            life.textContent = Lives;
+            gameState.board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+            clearBoard()
+        } else {
+            gameState.gameOver = true;
+            console.log("Game Over!");
+        }
+
     }
 }
 
 function checkLines() {
     let linesCleared = 0;
-
     for (let row = ROWS - 1; row >= 0; row--) {
         if (gameState.board[row].every(cell => cell !== 0)) {
             for (let col = 0; col < COLS; col++) {
@@ -289,7 +304,6 @@ function checkLines() {
                 const block = document.getElementById(index);
                 if (block) block.style.backgroundColor = '';
             }
-
             gameState.board.splice(row, 1);
             gameState.board.unshift(Array(COLS).fill(0));
             linesCleared++;
@@ -346,7 +360,7 @@ export function startMenu() {
 }
 
 function pauseGame() {
-    gameState.paused = true;
+    gameState.paused = !gameState.paused;
     console.log(gameState.paused)
     const pauseMenu = document.querySelector('.pause-menu');
     if (pauseMenu) {
@@ -392,7 +406,7 @@ function setTimer() {
     }
 
     function updateTimer() {
-        if (!gameState.paused) {
+        if (!gameState.paused && !gameState.gameOver) {
             time += 10;
             timeElement.textContent = formatTime(time);
             timeElement.setAttribute('datetime', formatTime(time));

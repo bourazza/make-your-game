@@ -10,6 +10,7 @@ let next = null
 let tetrominoes = {};
 let time = 0;
 let Lives = 3;
+var g=1
 
 let gameState = {
     board: Array(ROWS).fill().map(() => Array(COLS).fill(0)),
@@ -24,6 +25,7 @@ let gameState = {
 
 document.addEventListener('DOMContentLoaded', () => {
     startMenu()
+     gameOver();
 })
 
 function initialize() {
@@ -130,6 +132,7 @@ export function gameLoop(arg) {
                 moveTetromino(startY, startX);
                 nextTetromino('next', tetrominoes[randomPiece])
                 nextTetromino('next2', tetrominoes[next])
+                
             } else {
                 placeTetromino();
                 checkLines();
@@ -137,6 +140,7 @@ export function gameLoop(arg) {
             }
             gameState.dropSpeed = 0
         }
+
     }
     requestAnimationFrame(gameLoop)
 }
@@ -286,10 +290,13 @@ function spawnNewPiece() {
             let life = document.querySelector('#liveValue')
             life.textContent = Lives;
             gameState.board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+            
             clearBoard()
+            
         } else {
             gameState.gameOver = true;
-            console.log("Game Over!");
+            
+
         }
 
     }
@@ -442,3 +449,32 @@ function rGame() {
     generateNewTetromino();
 }
 
+function gameOver() {
+    const menu = document.createElement("div");
+    menu.id = "gameOverMenu";
+    menu.className = "game-over-menu";
+ 
+
+    menu.innerHTML = `
+        <div >
+            <h2>Game Over</h2>
+            <p id="finalScore">Score: 0</p>
+            <p id="finalLevel">Level: 0</p>
+            <button id="restartGameBtn">Restart</button>
+        </div>
+    `;
+
+    document.body.appendChild(menu);
+}
+
+function displayGameover(score, level) {
+    const menu = document.getElementById("gameOverMenu");
+    document.getElementById("finalScore").textContent = `Score: ${score}`;
+    document.getElementById("finalLevel").textContent = `Level: ${level}`;
+    menu.style.display = "flex";
+
+    document.getElementById("restartGameBtn").onclick = () => {
+        menu.style.display = "none";
+        rGame();
+    };
+}

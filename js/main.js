@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initialize() {
     createBoard()
-    loadTetromioes()
     setupControls()
+    loadTetromioes()
     setTimer()
 }
 
@@ -128,7 +128,6 @@ function checkCollision(testY, testX, testPosition = position) {
 
 
 export function gameLoop() {
-    // gameState.dropSpeed = 0;
     if (!gameState.gameOver && !gameState.paused) {
         gameState.dropSpeed += 22
         if (gameState.dropSpeed > getUpdatedInterval()) {
@@ -174,25 +173,26 @@ function setupControls() {
                 }
                 break;
             case 'ArrowDown':
-                if (!checkCollision(startY + 1, startX)) {
+                if (checkCollision(startY + 1, startX)) {
+                    placeTetromino();
+                    checkLines();
+                    spawnNewPiece();
+                    break;
+                } else {
                     startY += 1;
                     clearBlocks(startY - 1, startX)
                     moveTetromino(startY, startX);
                     gameState.score += 2
                     updateStats(gameState.score, gameState.level)
-                } else {
-                    placeTetromino();
-                    checkLines();
-                    spawnNewPiece();
+                     break;
                 }
-                break;
             case 'ArrowUp':
                 const newPosition = (position + 1) % 4;
                 if (!checkCollision(startY, startX, newPosition)) {
                     clearBlocks(startY, startX);
                     position = newPosition;
                     moveTetromino(startY, startX);
-                } else if (!checkCollision(startY, startX -1, newPosition)) {
+                } else if (!checkCollision(startY, startX - 1, newPosition)) {
                     clearBlocks(startY, startX);
                     startX -= 1;
                     position = newPosition;

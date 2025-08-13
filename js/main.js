@@ -197,9 +197,9 @@ function setupControls() {
                     startX -= 1;
                     position = newPosition;
                     moveTetromino(startY, startX);
-                } else if (!checkCollision(startY, startX - gameState.currentTetromino.rotations[newPosition].width - 1, newPosition)) {
+                } else if (!checkCollision(startY, startX - 3, newPosition)) {
                     clearBlocks(startY, startX);
-                    startX -= (gameState.currentTetromino.rotations[newPosition].width - 1);
+                    startX -= 3;
                     position = newPosition;
                     moveTetromino(startY, startX);
                 }

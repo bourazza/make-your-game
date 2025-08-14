@@ -5,9 +5,11 @@
 }
 
 body {
-  background-color: #222;
-  font-family: Arial, sans-serif;
-  color: #fff;
+  background: radial-gradient(circle at center, #001122, #000000);
+  font-family: 'Courier New', monospace;
+  color: #00ff00;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .container {
@@ -16,11 +18,14 @@ body {
   align-items: center;
   margin: 20px auto;
   max-width: 800px;
-  background-color: #333;
-  border: 2px solid #555;
-  border-radius: 8px;
+  background: linear-gradient(145deg, #1a0033, #330066);
+  border: 4px solid #00ff00;
+  border-radius: 0;
   padding: 20px;
   gap: 20px;
+  box-shadow: 
+    0 0 20px #00ff00,
+    inset 0 0 20px rgba(0, 255, 0, 0.1);
 }
 
 .right-column {
@@ -34,9 +39,12 @@ body {
   flex-wrap: wrap;
   width: 400px;
   height: 800px;
-  background-color: #000;
-  border: 2px solid #fff;
-  border-radius: 4px;
+  background: #000011;
+  border: 4px solid #ff00ff;
+  border-radius: 0;
+  box-shadow: 
+    0 0 15px #ff00ff,
+    inset 0 0 10px rgba(255, 0, 255, 0.2);
 }
 
 .pause-menu {
@@ -47,32 +55,43 @@ body {
   transform: translate(-50%, -50%);
   width: 250px;
   height: 300px;
-  background-color: #444;
+  background: linear-gradient(145deg, #220044, #440088);
   z-index: 10;
-  border: 2px solid #fff;
-  border-radius: 8px;
+  border: 4px solid #00ffff;
+  border-radius: 0;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 20px;
+  box-shadow: 
+    0 0 25px #00ffff,
+    inset 0 0 15px rgba(0, 255, 255, 0.1);
 }
 
 .continue-button, .restart-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px solid #fff;
+  border: 3px solid #ffff00;
   width: 100px;
   height: 40px;
-  background-color: #555;
+  background: linear-gradient(145deg, #004400, #006600);
   cursor: pointer;
-  color: #fff;
-  border-radius: 4px;
+  color: #ffff00;
+  border-radius: 0;
   font-weight: bold;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  box-shadow: 
+    0 0 10px #ffff00,
+    inset 0 0 5px rgba(255, 255, 0, 0.2);
 }
 
 .continue-button:hover, .restart-button:hover {
-  background-color: #666;
+  background: linear-gradient(145deg, #006600, #008800);
+  box-shadow: 
+    0 0 15px #ffff00,
+    inset 0 0 10px rgba(255, 255, 0, 0.3);
 }
 
 .menu-button {
@@ -84,79 +103,103 @@ body {
   height: 155px;
   display: flex;
   flex-wrap: wrap;
-  background-color: #000;
-  border: 2px solid #fff;
-  border-radius: 2px;
+  background: #000011;
+  border: 3px solid #00ffff;
+  border-radius: 0;
   margin: 1vh;
+  box-shadow: 
+    0 0 10px #00ffff,
+    inset 0 0 5px rgba(0, 255, 255, 0.2);
 }
 
 .tetris-header div {
   width: calc(100% / 10);
   height: calc(100% / 20);
-  border: 1px solid #333;
+  border: 1px solid #333366;
 }
 
 .tetris-predicted div, .tetris-predected2 div {
   width: calc(100% / 4);
   height: calc(100% / 4);
-  border: 1px solid #333;
+  border: 1px solid #333366;
 }
 
 .stat {
   width: 155px;
   height: 270px;
-  background-color: #555;
+  background: linear-gradient(145deg, #002200, #004400);
   text-align: center;
-  border: 2px solid #fff;
-  border-radius: 8px;
+  border: 3px solid #00ff00;
+  border-radius: 0;
   padding: 10px;
   margin: 1vh;
+  box-shadow: 
+    0 0 15px #00ff00,
+    inset 0 0 10px rgba(0, 255, 0, 0.1);
 }
 
 .stat h1 {
-  color: #fff;
+  color: #ffff00;
   font-size: 14px;
   margin: 10px 0 5px 0;
   text-transform: uppercase;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 5px #ffff00;
 }
 
 .stat h4 {
   height: 30px;
-  background-color: #333;
+  background: linear-gradient(145deg, #110022, #220044);
   margin: 5px 0;
-  border-radius: 4px;
-  border: 1px solid #fff;
+  border-radius: 0;
+  border: 2px solid #ff00ff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  color: #00ffff;
+  font-family: 'Courier New', monospace;
+  box-shadow: 
+    0 0 8px #ff00ff,
+    inset 0 0 5px rgba(255, 0, 255, 0.2);
 }
 
 /* Start Menu & Countdown */
 #startMenu {
-  background-color: rgba(0, 0, 0, 0.8);
+  background: radial-gradient(circle at center, rgba(0, 0, 50, 0.9), rgba(0, 0, 0, 0.9));
 }
 
 #startBtn {
-  background-color: #555;
-  border: 2px solid #fff;
-  border-radius: 8px;
-  color: #fff;
+  background: linear-gradient(145deg, #440000, #660000);
+  border: 4px solid #ff0000;
+  border-radius: 0;
+  color: #ffff00;
   font-weight: bold;
   cursor: pointer;
   padding: 15px 30px;
   font-size: 18px;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  box-shadow: 
+    0 0 20px #ff0000,
+    inset 0 0 10px rgba(255, 0, 0, 0.2);
 }
 
 #startBtn:hover {
-  background-color: #666;
+  background: linear-gradient(145deg, #660000, #880000);
+  box-shadow: 
+    0 0 25px #ff0000,
+    inset 0 0 15px rgba(255, 0, 0, 0.3);
 }
 
 #countdown {
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.8);
-  border: 2px solid #fff;
-  border-radius: 8px;
+  color: #00ff00;
+  background: linear-gradient(145deg, rgba(0, 50, 0, 0.9), rgba(0, 100, 0, 0.9));
+  border: 4px solid #00ff00;
+  border-radius: 0;
+  box-shadow: 
+    0 0 20px #00ff00,
+    inset 0 0 10px rgba(0, 255, 0, 0.2);
 }
 
 /* Responsive Design */
@@ -267,20 +310,20 @@ body {
   .container {
     width: 100vw;
     padding: 5px;
-    border-radius: 8px;
+    border-radius: 0;
     margin: 5px auto;
   }
   
   .tetris-header {
     width: min(280px, 90vw);
     height: min(560px, 55vh);
-    border-width: 2px;
+    border-width: 3px;
   }
   
   .tetris-predicted, .tetris-predected2 {
     width: clamp(110px, 35vw, 130px);
     height: clamp(110px, 22vh, 130px);
-    border-width: 2px;
+    border-width: 3px;
   }
   
   .stat {
@@ -288,7 +331,7 @@ body {
     height: auto;
     min-height: clamp(140px, 25vh, 170px);
     font-size: 0.7rem;
-    border-width: 2px;
+    border-width: 3px;
     padding: 6px 3px;
   }
   
@@ -341,60 +384,61 @@ body {
   }
 }
 
-
 /* Game Over Menu Theme */
-
 .game-over-menu {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: linear-gradient(145deg, #1a1a1a, #222);
-  border: 3px solid #0ff; /* Neon Cyan */
-  box-shadow:
-    0 0 10px #0ff,
-    0 0 20px #0ff,
-    0 0 40px #0ff;
+  background: linear-gradient(145deg, #440000, #660000);
+  border: 4px solid #ff0000;
+  box-shadow: 
+    0 0 25px #ff0000,
+    inset 0 0 15px rgba(255, 0, 0, 0.2);
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 0;
   text-align: center;
   z-index: 1000;
-  display: none; /* Hidden until game ends */
+  display: none;
   width: 300px;
-  font-family: 'Press Start 2P', cursive;
-      justify-content: center;
+  font-family: 'Courier New', monospace;
+  justify-content: center;
 }
 
 .game-over-menu h2 {
-  color: #ff0;
+  color: #ffff00;
   font-size: 20px;
   margin-bottom: 15px;
-  text-shadow:
-    0 0 5px #ff0,
-    0 0 10px #ff0;
+  text-shadow: 0 0 10px #ffff00;
+  text-transform: uppercase;
 }
 
 .game-over-menu p {
-  color: #fff;
+  color: #00ff00;
   font-size: 14px;
   margin-bottom: 20px;
+  text-transform: uppercase;
 }
 
 .game-over-menu button {
-  background: #0ff;
-  border: none;
-  color: #000;
+  background: linear-gradient(145deg, #004400, #006600);
+  border: 3px solid #00ff00;
+  color: #ffff00;
   font-size: 14px;
   padding: 10px 15px;
   cursor: pointer;
-  border-radius: 8px;
-  font-family: inherit;
-  transition: all 0.2s ease;
+  border-radius: 0;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  font-weight: bold;
+  box-shadow: 
+    0 0 15px #00ff00,
+    inset 0 0 8px rgba(0, 255, 0, 0.2);
 }
 
 .game-over-menu button:hover {
-  background: #00cccc;
-  box-shadow:
-    0 0 5px #0ff,
-    0 0 10px #0ff;
+  background: linear-gradient(145deg, #006600, #008800);
+  box-shadow: 
+    0 0 20px #00ff00,
+    inset 0 0 12px rgba(0, 255, 0, 0.3);
 }

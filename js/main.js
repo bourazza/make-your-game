@@ -57,7 +57,7 @@ function updatePreview() {
 }
 
 function loadTetromioes() {
-    fetch('js/tetrisshapes.json').then(response => response.json())
+    fetch('js/tetrominos.json').then(response => response.json())
         .then(data => {
             tetrominoes = data.tetrominoes;
             generateNewTetromino();
@@ -398,7 +398,7 @@ const updateStats = () => {
 function restartGame() {
     gameState.board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
     gameState.score = 0;
-    gameState.level = 0;
+    gameState.level = 1;
     gameState.dropSpeed = 0;
     gameState.paused = false;
     gameState.gameOver = false;

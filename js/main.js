@@ -414,3 +414,33 @@ function restartGame() {
     moveTetromino(startY, startX)
 }
 
+
+function gameOver() {
+    const menu = document.createElement("div");
+    menu.id = "gameOverMenu";
+    menu.className = "game-over-menu";
+ 
+
+    menu.innerHTML = `
+        <div >
+            <h2>Game Over</h2>
+            <p id="finalScore">Score: 0</p>
+            <p id="finalLevel">Level: 0</p>
+            <button id="restartGameBtn">Restart</button>
+        </div>
+    `;
+
+    document.body.appendChild(menu);
+}
+
+function displayGameover(score, level) {
+    const menu = document.getElementById("gameOverMenu");
+    document.getElementById("finalScore").textContent = `Score: ${score}`;
+    document.getElementById("finalLevel").textContent = `Level: ${level}`;
+    menu.style.display = "flex";
+
+    document.getElementById("restartGameBtn").onclick = () => {
+        menu.style.display = "none";
+        rGame();
+    };
+}

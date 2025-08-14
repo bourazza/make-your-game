@@ -35,8 +35,7 @@ function initialize() {
 
 function createBoard() {
     let tet = document.querySelector('.tetris-header')
-    let expected = document.querySelector('.this-tetris')
-    let expected2 = document.querySelector('.tetris-predicted')
+    let expected = document.querySelector('.tetris-predicted')
 
     for (let i = 0; i < 200; i++) {
         let dive = document.createElement('div')
@@ -44,24 +43,16 @@ function createBoard() {
         tet.appendChild(dive)
     }
 
-    for (let i = 0; i < 20; i++) {
-        let dive = document.createElement('div')
-        dive.id = "next" + i
-        expected.appendChild(dive)
-    }
-
     for (let i = 0; i < 16; i++) {
         let dive = document.createElement('div')
         dive.id = "next2" + i
-        expected2.appendChild(dive)
+        expected.appendChild(dive)
     }
 
     gameMenu();
 }
 
 function updatePreview() {
-    console.log('f');
-
     nextTetromino('next2', tetrominoes[next])
 }
 
@@ -75,8 +66,6 @@ function loadTetromioes() {
         .catch(error => console.error('Error loading shapes:', error));
 }
 
-
-//change the genrate check logic
 export function generateNewTetromino() {
     const pieces = Object.keys(tetrominoes)
     if (randomPiece === null) {
@@ -131,7 +120,6 @@ function checkCollision(tY, tX, testPosition = position) {
     return false;
 }
 
-
 export function gameLoop() {
     if (!gameState.gameOver && !gameState.paused) {
         gameState.dropSpeed += 22
@@ -142,7 +130,7 @@ export function gameLoop() {
                 moveTetromino(startY, startX);
             } else {
                 placeTetromino();
-                checkLines();
+                checkFullLines();
                 spawnNewPiece();
             }
             gameState.dropSpeed = 0
@@ -178,7 +166,7 @@ function setupControls() {
             case 'ArrowDown':
                 if (checkCollision(startY + 1, startX)) {
                     placeTetromino();
-                    checkLines();
+                    checkFullLines();
                     spawnNewPiece();
                     break;
                 } else {
@@ -281,7 +269,6 @@ function placeTetromino() {
     }
 }
 
-// this is for generate new pices
 function spawnNewPiece() {
     startY = 0;
     startX = 4;
@@ -303,7 +290,7 @@ function spawnNewPiece() {
     }
 }
 
-function checkLines() {
+function checkFullLines() {
     let linesCleared = 0;
     for (let row = ROWS - 1; row >= 0; row--) {
         if (gameState.board[row].every(cell => cell !== 0)) {
@@ -368,13 +355,12 @@ function gameMenu() {
     continueButton.addEventListener('click', () => {
         pauseMenu.style.display = 'none'
         gameState.paused = false
-        console.log(gameState.paused)
     })
 
 
     restartButton.addEventListener('click', () => {
         pauseMenu.style.display = 'none'
-        rGame()
+        restartGame()
     })
 }
 
@@ -409,7 +395,7 @@ const updateStats = () => {
     life.textContent = gameState.Lives
 }
 
-function rGame() {
+function restartGame() {
     gameState.board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
     gameState.score = 0;
     gameState.level = 0;

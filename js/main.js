@@ -56,9 +56,14 @@ function createBoard() {
         expected2.appendChild(dive)
     }
 
-    menuFunction();
+    gameMenu();
 }
 
+function updatePreview() {
+    console.log('f');
+
+    nextTetromino('next2', tetrominoes[next])
+}
 
 function loadTetromioes() {
     fetch('js/tetrisshapes.json').then(response => response.json())
@@ -82,7 +87,7 @@ export function generateNewTetromino() {
         next = pieces[Math.floor(Math.random() * pieces.length)]
     }
     gameState.currentTetromino = tetrominoes[randomPiece]
-
+    updatePreview()
 }
 
 export function clearBoard() {
@@ -103,15 +108,15 @@ function clearNext() {
     }
 }
 
-
-function checkCollision(testY, testX, testPosition = position) {
+// checkCollision: returns true in case if there is a collision
+function checkCollision(tY, tX, testPosition = position) {
     const rotation = gameState.currentTetromino.rotations[testPosition].shape;
 
     for (let row = 0; row < rotation.length; row++) {
         for (let col = 0; col < rotation[row].length; col++) {
             if (rotation[row][col] === 1) {
-                const boardY = testY + row;
-                const boardX = testX + col;
+                const boardY = tY + row;
+                const boardX = tX + col;
 
                 if (boardX < 0 || boardX >= COLS || boardY >= ROWS) {
                     return true;
@@ -135,8 +140,6 @@ export function gameLoop() {
                 startY++;
                 clearBlocks(startY - 1, startX)
                 moveTetromino(startY, startX);
-                nextTetromino('next', tetrominoes[randomPiece])
-                nextTetromino('next2', tetrominoes[next])
             } else {
                 placeTetromino();
                 checkLines();
@@ -184,7 +187,7 @@ function setupControls() {
                     moveTetromino(startY, startX);
                     gameState.score += 2
                     updateStats(gameState.score, gameState.level)
-                     break;
+                    break;
                 }
             case 'ArrowUp':
                 const newPosition = (position + 1) % 4;
@@ -248,7 +251,6 @@ function nextTetromino(id, g) {
 
     const shape = g.rotations[0].shape;
     const color = g.color;
-
 
     const offsetX = Math.floor((PREVIEW_COLS - shape[0].length) / 2);
     const offsetY = Math.floor((PREVIEW_ROWS - shape.length) / 2);
@@ -334,35 +336,14 @@ function checkLines() {
     }
 }
 
-// the game lunch 
 export function startMenu() {
     const startMenu = document.getElementById("startMenu");
     const startBtn = document.getElementById("startBtn");
-    const countdown = document.getElementById("countdown");
 
     startBtn.addEventListener("click", () => {
         startMenu.style.display = "none";
         initialize();
-        //startCountdown();
     });
-
-    function startCountdown() {
-        let count = 3;
-        countdown.style.display = "block";
-        countdown.textContent = count;
-
-        const interval = setInterval(() => {
-            count--;
-            if (count >= 0) {
-                countdown.textContent = count;
-            } else {
-                clearInterval(interval);
-                countdown.style.display = "none";
-                initialize();
-
-            }
-        }, 1000);
-    }
 }
 
 function pauseGame() {
@@ -374,10 +355,7 @@ function pauseGame() {
     }
 }
 
-
-
-
-function menuFunction() {
+function gameMenu() {
     const menuButton = document.querySelector('.menu-button')
     const pauseMenu = document.querySelector('.pause-menu')
     const continueButton = document.querySelector('.continue-button')
@@ -407,7 +385,7 @@ function setTimer() {
     function formatTime(duration) {
         const minutes = Math.floor(duration / 60000).toString().padStart(2, '0');
         const seconds = Math.floor((duration % 60000) / 1000).toString().padStart(2, '0');
-        const milliseconds = Math.floor(duration % 1000).toString().padStart(3, '0'); // pad to 3 digits
+        const milliseconds = Math.floor(duration % 1000).toString().padStart(3, '0');
         return `${minutes}:${seconds}:${milliseconds}`;
     }
 
@@ -439,14 +417,15 @@ function rGame() {
     gameState.paused = false;
     gameState.gameOver = false;
     gameState.Lives = 3;
+    randomPiece = null;
+    next = null;
     time = 0;
     startX = 4;
     startY = 0;
-    generateNewTetromino();
+    clearNext();
+    clearBoard();
+    updateStats(0, 0);
     generateNewTetromino();
     moveTetromino(startY, startX)
-    clearBoard();
-    clearNext();
-    updateStats(0, 0);
 }
 

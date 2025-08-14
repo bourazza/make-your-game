@@ -340,3 +340,61 @@ body {
     font-size: 0.6rem;
   }
 }
+
+
+/* Game Over Menu Theme */
+
+.game-over-menu {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(145deg, #1a1a1a, #222);
+  border: 3px solid #0ff; /* Neon Cyan */
+  box-shadow:
+    0 0 10px #0ff,
+    0 0 20px #0ff,
+    0 0 40px #0ff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  z-index: 1000;
+  display: none; /* Hidden until game ends */
+  width: 300px;
+  font-family: 'Press Start 2P', cursive;
+      justify-content: center;
+}
+
+.game-over-menu h2 {
+  color: #ff0;
+  font-size: 20px;
+  margin-bottom: 15px;
+  text-shadow:
+    0 0 5px #ff0,
+    0 0 10px #ff0;
+}
+
+.game-over-menu p {
+  color: #fff;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.game-over-menu button {
+  background: #0ff;
+  border: none;
+  color: #000;
+  font-size: 14px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.game-over-menu button:hover {
+  background: #00cccc;
+  box-shadow:
+    0 0 5px #0ff,
+    0 0 10px #0ff;
+}

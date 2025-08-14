@@ -44,16 +44,16 @@ function createBoard() {
     }
 
     for (let i = 0; i < 16; i++) {
-        let dive = document.createElement('div')
-        dive.id = "next2" + i
-        expected.appendChild(dive)
+        let div = document.createElement('div')
+        div.id = "next" + i
+        expected.appendChild(div)
     }
 
     gameMenu();
 }
 
 function updatePreview() {
-    nextTetromino('next2', tetrominoes[next])
+    nextTetromino('next', tetrominoes[next])
 }
 
 function loadTetromioes() {
@@ -90,7 +90,7 @@ export function clearBoard() {
 
 function clearNext() {
     for (let i = 0; i < 20; i++) {
-        const cell = document.getElementById("next2" + i);
+        const cell = document.getElementById("next" + i);
         if (cell) {
             cell.style.backgroundColor = '';
         }
@@ -335,7 +335,6 @@ export function startMenu() {
 
 function pauseGame() {
     gameState.paused = !gameState.paused;
-    console.log(gameState.paused)
     const pauseMenu = document.querySelector('.pause-menu');
     if (pauseMenu) {
         pauseMenu.style.display = gameState.paused ? 'flex' : 'none';

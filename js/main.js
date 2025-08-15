@@ -1,3 +1,4 @@
+import{createBoard} from "./gameReload.js"
 
 export const COLS = 10
 export const ROWS = 20
@@ -31,26 +32,27 @@ function initialize() {
     setupControls()
     loadTetromioes()
     setTimer()
+    gameOver()
 }
 
-function createBoard() {
-    let tet = document.querySelector('.tetris-header')
-    let expected = document.querySelector('.tetris-predicted')
+// function createBoard() {
+//     let tet = document.querySelector('.tetris-header')
+//     let expected = document.querySelector('.tetris-predicted')
 
-    for (let i = 0; i < 200; i++) {
-        let dive = document.createElement('div')
-        dive.id = i
-        tet.appendChild(dive)
-    }
+//     for (let i = 0; i < 200; i++) {
+//         let dive = document.createElement('div')
+//         dive.id = i
+//         tet.appendChild(dive)
+//     }
 
-    for (let i = 0; i < 16; i++) {
-        let div = document.createElement('div')
-        div.id = "next" + i
-        expected.appendChild(div)
-    }
+//     for (let i = 0; i < 16; i++) {
+//         let div = document.createElement('div')
+//         div.id = "next" + i
+//         expected.appendChild(div)
+//     }
 
-    gameMenu();
-}
+//     gameMenu();
+// }
 
 function updatePreview() {
     nextTetromino('next', tetrominoes[next])
@@ -284,6 +286,7 @@ function spawnNewPiece() {
             clearBoard()
         } else {
             gameState.gameOver = true;
+            displayGameover( gameState.score , gameState.level)
             console.log("Game Over!");
         }
 
@@ -341,7 +344,7 @@ function pauseGame() {
     }
 }
 
-function gameMenu() {
+export function gameMenu() {
     const menuButton = document.querySelector('.menu-button')
     const pauseMenu = document.querySelector('.pause-menu')
     const continueButton = document.querySelector('.continue-button')
@@ -441,6 +444,7 @@ function displayGameover(score, level) {
 
     document.getElementById("restartGameBtn").onclick = () => {
         menu.style.display = "none";
-        rGame();
+        
+        restartGame()
     };
 }

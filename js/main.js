@@ -1,16 +1,14 @@
 import { gameOver} from "./gmaeMenus.js"
 import {createBoard, nextTetromino} from "./bordManupulation.js"
-import { gameLoop ,setupControls, position} from "./gameLogique.js"
+import { gameLoop ,setupControls, position,generateNewTetromino,next,setTimer} from "./gameLogique.js"
 
 export const COLS = 10
 export const ROWS = 20
 export let pause = 0
 
 
-export let randomPiece = null
-let next = null
+
 export let tetrominoes = {};
-let time = 0;
 
 export let gameState = {
     board: Array(ROWS).fill().map(() => Array(COLS).fill(0)),
@@ -52,18 +50,7 @@ function loadTetromioes() {
         .catch(error => console.error('Error loading shapes:', error));
 }
 
-export function generateNewTetromino() {
-    const pieces = Object.keys(tetrominoes)
-    if (randomPiece === null) {
-        randomPiece = pieces[Math.floor(Math.random() * pieces.length)]
-        next = pieces[Math.floor(Math.random() * pieces.length)]
-    } else {
-        randomPiece = next
-        next = pieces[Math.floor(Math.random() * pieces.length)]
-    }
-    gameState.currentTetromino = tetrominoes[randomPiece]
-    updatePreview()
-}
+
 
 export function clearBoard() {
     for (let i = 0; i < 200; i++) {
@@ -74,7 +61,7 @@ export function clearBoard() {
     }
 }
 
-function clearNext() {
+export function clearNext() {
     for (let i = 0; i < 20; i++) {
         const cell = document.getElementById("next" + i);
         if (cell) {
@@ -116,7 +103,7 @@ export function startMenu() {
     });
 }
 
-function pauseGame() {
+export function pauseGame() {
     gameState.paused = !gameState.paused;
     const pauseMenu = document.querySelector('.pause-menu');
     if (pauseMenu) {
@@ -124,25 +111,6 @@ function pauseGame() {
     }
 }
 
-function setTimer() {
-    const timeElement = document.querySelector('#TimeValue time');
-
-    function formatTime(duration) {
-        const minutes = Math.floor(duration / 60000).toString().padStart(2, '0');
-        const seconds = Math.floor((duration % 60000) / 1000).toString().padStart(2, '0');
-        const milliseconds = Math.floor(duration % 1000).toString().padStart(3, '0');
-        return `${minutes}:${seconds}:${milliseconds}`;
-    }
-
-    function updateTimer() {
-        if (!gameState.paused && !gameState.gameOver) {
-            time += 10;
-            timeElement.textContent = formatTime(time);
-            timeElement.setAttribute('datetime', formatTime(time));
-        }
-    }
-    setInterval(updateTimer, 10);
-}
 
 
 export const updateStats = () => {

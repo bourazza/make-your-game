@@ -1,10 +1,15 @@
-import {gameState,checkCollision,updateStats,generateNewTetromino,ROWS,COLS,clearBoard,randomPiece} from "./main.js"
+import {gameState,checkCollision,updateStats,ROWS,COLS,clearBoard,pauseGame,tetrominoes,updatePreview,clearNext} from "./main.js"
 import {clearBlocks,moveTetromino,placeTetromino} from "./bordManupulation.js"
 import {displayGameover} from "./gmaeMenus.js"
 import {checkFullLines} from "./stat.js"
 export let startX = 4
 export let startY = 0;
 export let position = 0
+export let randomPiece = null
+export let next = null
+export let time = 0;
+
+
 export function gameLoop() {
     if (!gameState.gameOver && !gameState.paused) {
         gameState.dropSpeed += 22
@@ -123,4 +128,35 @@ export function restartGame() {
     updateStats(0, 0);
     generateNewTetromino();
     moveTetromino(startY, startX)
+}
+export function generateNewTetromino() {
+    const pieces = Object.keys(tetrominoes)
+    if (randomPiece === null) {
+        randomPiece = pieces[Math.floor(Math.random() * pieces.length)]
+        next = pieces[Math.floor(Math.random() * pieces.length)]
+    } else {
+        randomPiece = next
+        next = pieces[Math.floor(Math.random() * pieces.length)]
+    }
+    gameState.currentTetromino = tetrominoes[randomPiece]
+    updatePreview()
+}
+export function setTimer() {
+    const timeElement = document.querySelector('#TimeValue time');
+
+    function formatTime(duration) {
+        const minutes = Math.floor(duration / 60000).toString().padStart(2, '0');
+        const seconds = Math.floor((duration % 60000) / 1000).toString().padStart(2, '0');
+        const milliseconds = Math.floor(duration % 1000).toString().padStart(3, '0');
+        return `${minutes}:${seconds}:${milliseconds}`;
+    }
+
+    function updateTimer() {
+        if (!gameState.paused && !gameState.gameOver) {
+            time += 10;
+            timeElement.textContent = formatTime(time);
+            timeElement.setAttribute('datetime', formatTime(time));
+        }
+    }
+    setInterval(updateTimer, 10);
 }

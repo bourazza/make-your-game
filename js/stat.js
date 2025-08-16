@@ -1,4 +1,4 @@
-import {gameState,updateStats,COLS, ROWS} from "./main.js"
+import { gameState, updateStats, COLS, ROWS } from "./main.js"
 // import {startX,startY} from "./gameLogique.js"
 export function checkFullLines() {
     let linesCleared = 0;

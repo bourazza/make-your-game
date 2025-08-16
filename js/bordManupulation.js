@@ -1,6 +1,6 @@
-import {gameMenu} from "./gmaeMenus.js"
-import {gameState,COLS, ROWS} from "./main.js"
-import {startX,startY,position} from "./gameLogique.js"
+import { gameMenu } from "./gameMenus.js"
+import { gameState, COLS, ROWS } from "./main.js"
+import { startX, startY, position } from "./gameLogique.js"
 export function createBoard() {
     let tet = document.querySelector('.tetris-header')
     let expected = document.querySelector('.tetris-predicted')

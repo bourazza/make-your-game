@@ -1,6 +1,6 @@
-import { gameOver} from "./gmaeMenus.js"
-import {createBoard, nextTetromino} from "./bordManupulation.js"
-import { gameLoop ,setupControls, position,generateNewTetromino,next,setTimer} from "./gameLogique.js"
+import { gameOver } from "./gameMenus.js"
+import { createBoard, nextTetromino } from "./bordManupulation.js"
+import { gameLoop, setupControls, position, generateNewTetromino, next, setTimer } from "./gameLogique.js"
 
 export const COLS = 10
 export const ROWS = 20

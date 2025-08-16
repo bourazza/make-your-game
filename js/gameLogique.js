@@ -1,8 +1,8 @@
-import {gameState,checkCollision,updateStats,ROWS,COLS,clearBoard,pauseGame,tetrominoes,updatePreview,clearNext} from "./main.js"
-import {clearBlocks,moveTetromino,placeTetromino} from "./bordManupulation.js"
-import {displayGameover} from "./gmaeMenus.js"
-import {checkFullLines} from "./stat.js"
-export let startX = 4
+import { gameState, checkCollision, updateStats, ROWS, COLS, clearBoard, pauseGame, tetrominoes, updatePreview, clearNext } from "./main.js"
+import { clearBlocks, moveTetromino, placeTetromino } from "./bordManupulation.js"
+import { displayGameover } from "./gameMenus.js"
+import { checkFullLines } from "./stat.js"
+export let startX = 3;
 export let startY = 0;
 export let position = 0
 export let randomPiece = null
@@ -13,7 +13,7 @@ export let time = 0;
 export function gameLoop() {
     if (!gameState.gameOver && !gameState.paused) {
         gameState.dropSpeed += 22
-        if (gameState.dropSpeed > getUpdatedInterval()) { 
+        if (gameState.dropSpeed > getUpdatedInterval()) {
             if (!checkCollision(startY + 1, startX)) {
                 startY++;
                 clearBlocks(startY - 1, startX)
@@ -89,9 +89,10 @@ export function setupControls() {
         }
     })
 }
+
 export function spawnNewPiece() {
     startY = 0;
-    startX = 4;
+    startX = 3;
     position = 0;
     generateNewTetromino();
 
@@ -104,7 +105,7 @@ export function spawnNewPiece() {
             clearBoard()
         } else {
             gameState.gameOver = true;
-            displayGameover( gameState.score , gameState.level)
+            displayGameover(gameState.score, gameState.level)
             console.log("Game Over!");
         }
 
@@ -121,7 +122,7 @@ export function restartGame() {
     randomPiece = null;
     next = null;
     time = 0;
-    startX = 4;
+    startX = 3;
     startY = 0;
     clearNext();
     clearBoard();
@@ -129,6 +130,7 @@ export function restartGame() {
     generateNewTetromino();
     moveTetromino(startY, startX)
 }
+
 export function generateNewTetromino() {
     const pieces = Object.keys(tetrominoes)
     if (randomPiece === null) {
@@ -141,6 +143,7 @@ export function generateNewTetromino() {
     gameState.currentTetromino = tetrominoes[randomPiece]
     updatePreview()
 }
+
 export function setTimer() {
     const timeElement = document.querySelector('#TimeValue time');
 
